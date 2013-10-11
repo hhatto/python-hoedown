@@ -7,6 +7,7 @@ The Python binding for hoedown_, a markdown parsing library.
 the original code of the misaka_ library by Frank Smit.
 
 .. _hoedown: https://github.com/hoedown/hoedown
+.. _misaka: https://github.com/FSX/misaka
 
 
 Installation
