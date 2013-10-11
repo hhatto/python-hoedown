@@ -1,0 +1,41 @@
+python-hoedown
+==============
+
+.. image:: https://secure.travis-ci.org/hhatto/python-hoedown.png?branch=master
+
+The Python binding for hoedown_, a markdown parsing library.
+the original code of the misaka_ library by Frank Smit.
+
+.. _hoedown: https://github.com/hoedown/hoedown
+
+
+Installation
+------------
+
+Cython is only needed to compile .pyx file.
+
+With pip::
+
+    pip install hoedown
+
+Or manually::
+
+    python setup.py install
+
+
+Example
+-------
+
+Very simple example::
+
+    from hoedown import Markdown, HtmlRenderer
+
+    rndr = HtmlRenderer()
+    md = Markdown(rndr)
+
+    print md.render('some text')
+
+Or::
+
+    import hoedown as m
+    print m.html('some other text')

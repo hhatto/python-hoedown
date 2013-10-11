@@ -1,0 +1,3 @@
+include README.rst setup.py
+recursive-include src *
+recursive-include benchmark *
