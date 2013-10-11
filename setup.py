@@ -53,9 +53,9 @@ class VendorCommand(BaseCommand):
         os.system('git submodule update --init')
         os.system('git submodule foreach git pull origin master')
         files = []
-        dest = os.path.join(dirname, 'hoedownpy/_hoedown')
+        dest = os.path.join(dirname, 'hoedownpy/_hoedown/src')
 
-        for path in ['vendor/hoedown/src/*', 'vendor/hoedown/html/*']:
+        for path in ['vendor/hoedown/src/*', ]:
             files += glob.glob(os.path.join(dirname, path))
 
         for path in files:
