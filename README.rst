@@ -2,6 +2,7 @@ python-hoedown
 ==============
 
 .. image:: https://secure.travis-ci.org/hhatto/python-hoedown.png?branch=master
+    :target: https://travis-ci.org/hhatto/python-hoedown
 
 The Python binding for hoedown_, a markdown parsing library.
 the original code of the misaka_ library by Frank Smit.
