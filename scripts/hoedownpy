@@ -38,7 +38,7 @@ hoedown_html_flags = {
 }
 
 
-help = '''Usage: hoedown [--parse-<extension>...] [--render-<flag>...] [--smarty] [<file>...]
+help = '''Usage: hoedownpy [--parse-<extension>...] [--render-<flag>...] [--smarty] [<file>...]
 
 Parser extensions:
 %s
