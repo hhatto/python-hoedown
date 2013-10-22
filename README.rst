@@ -40,3 +40,12 @@ Or::
 
     import hoedown as m
     print m.html('some other text')
+
+
+Command Line Tool
+-----------------
+
+output from Markdown to HTML::
+
+    hoedownpy MARKDOWNFILE.md
+
