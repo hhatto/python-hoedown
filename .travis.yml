@@ -13,3 +13,12 @@ install:
 
 script:
  - python tests/hoedown_test.py
+
+after_success:
+ - pip install --quiet coverage coveralls
+ - coverage erase
+ - HOEDOWN_COVERAGE=1 coverage run --branch --parallel-mode --omit='*/site-packages/*' test/hoedown_test.py
+ - coverage combine
+ - coverage report --show-missing
+ - coverage xml --include=hoedown.py
+ - coveralls
