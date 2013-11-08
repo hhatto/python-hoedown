@@ -692,7 +692,9 @@ hoedown_html_toc_renderer_new(int nesting_level)
 
 	/* Prepare the state pointer */
 	state = malloc(sizeof(rndr_state));
-	if (!state) return NULL;
+	if (!state)
+		return NULL;
+
 	memset(state, 0x0, sizeof(rndr_state));
 
 	if (nesting_level > 0) {
@@ -702,7 +704,11 @@ hoedown_html_toc_renderer_new(int nesting_level)
 
 	/* Prepare the renderer */
 	renderer = malloc(sizeof(hoedown_renderer));
-	if (!renderer) {free(state); return NULL;}
+	if (!renderer) {
+		free(state);
+		return NULL;
+	}
+
 	memcpy(renderer, &cb_default, sizeof(hoedown_renderer));
 	
 	renderer->opaque = state;
@@ -757,7 +763,9 @@ hoedown_html_renderer_new(unsigned int render_flags, int nesting_level)
 
 	/* Prepare the state pointer */
 	state = malloc(sizeof(rndr_state));
-	if (!state) return NULL;
+	if (!state)
+		return NULL;
+
 	memset(state, 0x0, sizeof(rndr_state));
 
 	state->flags = render_flags;
@@ -769,7 +777,11 @@ hoedown_html_renderer_new(unsigned int render_flags, int nesting_level)
 
 	/* Prepare the renderer */
 	renderer = malloc(sizeof(hoedown_renderer));
-	if (!renderer) {free(state); return NULL;}
+	if (!renderer) {
+		free(state);
+		return NULL;
+	}
+
 	memcpy(renderer, &cb_default, sizeof(hoedown_renderer));
 
 	if (render_flags & HOEDOWN_HTML_SKIP_IMAGES)
@@ -787,9 +799,9 @@ hoedown_html_renderer_new(unsigned int render_flags, int nesting_level)
 	return renderer;
 }
 
-extern void
+void
 hoedown_html_renderer_free(hoedown_renderer *renderer)
 {
-  free(renderer->opaque);
-  free(renderer);
+	free(renderer->opaque);
+	free(renderer);
 }
