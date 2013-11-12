@@ -272,6 +272,19 @@ This is some awesome code
         ok(self.render_with(text, extensions=EXT_SPACE_HEADERS)).not_contains('<h1>')
 
 
+class MarkdownCustomRendererTest(TestCase):
+    def setup(self):
+        class MyRenderer(HtmlRenderer):
+            def block_code(self, text, lang):
+                return '<pre class="unique-%s">%s</pre>' % (lang, text)
+
+        self.r = Markdown(MyRenderer(), extensions=EXT_FENCED_CODE)
+
+    def test_fenced_code(self):
+        text = self.r.render('```python\ndef foo():\n   pass\n```')
+        ok(text).contains('unique-python')
+
+
 class MarkdownConformanceTest_10(TestCase):
     name = 'Markdown Conformance 1.0'
     suite = 'MarkdownTest_1.0'
@@ -336,6 +349,7 @@ def run_tests():
         SmartyPantsTest,
         HtmlRenderTest,
         MarkdownParserTest,
+        MarkdownCustomRendererTest,
         MarkdownConformanceTest_10,
         MarkdownConformanceTest_103,
         UnicodeTest
