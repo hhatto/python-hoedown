@@ -28,7 +28,7 @@ cdef extern from '_hoedown/src/html.h':
 
 
 cdef extern from '_hoedown/src/markdown.h':
-    enum mkd_autolink:
+    enum hoedown_autolink:
         pass
 
     struct hoedown_renderer:
@@ -46,7 +46,7 @@ cdef extern from '_hoedown/src/markdown.h':
         void (*table_cell)(hoedown_buffer *ob, hoedown_buffer *text, int flags, void *opaque)
 
         # Span level callbacks - NULL or return 0 prints the span verbatim
-        int (*autolink)(hoedown_buffer *ob, hoedown_buffer *link, mkd_autolink type, void *opaque)
+        int (*autolink)(hoedown_buffer *ob, hoedown_buffer *link, hoedown_autolink type, void *opaque)
         int (*codespan)(hoedown_buffer *ob, hoedown_buffer *text, void *opaque)
         int (*double_emphasis)(hoedown_buffer *ob, hoedown_buffer *text, void *opaque)
         int (*emphasis)(hoedown_buffer *ob, hoedown_buffer *text, void *opaque)
@@ -66,7 +66,10 @@ cdef extern from '_hoedown/src/markdown.h':
         void (*doc_header)(hoedown_buffer *ob, void *opaque)
         void (*doc_footer)(hoedown_buffer *ob, void *opaque)
 
-    enum mkd_autolink:
+        # state
+        void *opaque
+
+    enum hoedown_autolink:
         pass
 
     struct hoedown_markdown:

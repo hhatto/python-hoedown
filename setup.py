@@ -89,6 +89,7 @@ setup(
     ext_modules=[Extension('hoedown', [
         'hoedownpy/hoedown.c',
         'hoedownpy/wrapper.c',
+        'hoedownpy/cb.c',
         'hoedownpy/_hoedown/src/html.c',
         'hoedownpy/_hoedown/src/stack.c',
         'hoedownpy/_hoedown/src/markdown.c',

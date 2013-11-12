@@ -127,18 +127,22 @@ cdef class BaseRenderer:
         self.flags = flags
         self.setup()
 
-        # Set callbacks
-        ##cdef void **source = <void **> &wrapper.callback_funcs
-        ##cdef void **dest = <void **> &self.callbacks
+        cdef wrapper.renderopt *options
+        options = <wrapper.renderopt *> self.callbacks.opaque
+        options.self = <void *> self
 
-        ##cdef unicode method_name
-        ##for i from 0 <= i < <int> wrapper.method_count by 1:
-        ##    # In Python 3 ``wrapper.method_names[i]`` is a byte string.
-        ##    # This means hasattr can't find any method in the renderer, so
-        ##    # ``wrapper.method_names[i]`` is converted to a normal string first.
-        ##    method_name = wrapper.method_names[i].decode('utf-8')
-        ##    if hasattr(self, method_name):
-        ##        dest[i] = source[i]
+        # Set callbacks
+        cdef void **source = <void **> &wrapper.callback_funcs
+        cdef void **dest = <void **> self.callbacks
+
+        cdef unicode method_name
+        for i from 0 <= i < <int> wrapper.method_count by 1:
+            # In Python 3 ``wrapper.method_names[i]`` is a byte string.
+            # This means hasattr can't find any method in the renderer, so
+            # ``wrapper.method_names[i]`` is converted to a normal string first.
+            method_name = wrapper.method_names[i].decode('utf-8')
+            if hasattr(self, method_name):
+                dest[i] = source[i]
 
     def setup(self):
         """A method that can be overridden by the renderer that sublasses ``BaseRenderer``.
@@ -186,7 +190,7 @@ cdef class Markdown:
             raise ValueError('expected instance of BaseRenderer, %s found' % \
                 renderer.__class__.__name__)
 
-        self.renderer = <BaseRenderer> renderer
+        self.renderer = renderer
         self.markdown = _hoedown.hoedown_markdown_new(
             extensions, 16,
             self.renderer.callbacks)
