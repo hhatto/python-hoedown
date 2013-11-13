@@ -274,15 +274,70 @@ This is some awesome code
 
 class MarkdownCustomRendererTest(TestCase):
     def setup(self):
-        class MyRenderer(HtmlRenderer):
+        class MyBlockRenderer(HtmlRenderer):
             def block_code(self, text, lang):
                 return '<pre class="unique-%s">%s</pre>' % (lang, text)
+            def block_quote(self, text):
+                return '<blockquote cite="my">\n%s</blockquote>' % (text)
+            def block_html(self, text):
+                return 'This is html: %s' % (text)
+            def header(self, text, level):
+                return '<h%d class="custom">%s</h%d>' % (level, text, level)
+            def hrule(self):
+                return 'HR\n'
+            def list(self, text, flags):
+                return 'LIST\n%s' % (text)
+            def list_item(self, text, flags):
+                return '[LIST ITEM:%s]\n' % (text.strip())
 
-        self.r = Markdown(MyRenderer(), extensions=EXT_FENCED_CODE)
+        class MyTableRenderer(HtmlRenderer):
+            def table(self, header, body):
+                return 'TABLE'
+
+        class MyParagraphRenderer(HtmlRenderer):
+            def paragraph(self, text):
+                return 'PARAGRAPH:%s\n' % text
+
+        self.br = Markdown(MyBlockRenderer(), extensions=EXT_FENCED_CODE)
+        self.tr = Markdown(MyTableRenderer(), extensions=EXT_FENCED_CODE|EXT_TABLES)
+        self.pr = Markdown(MyParagraphRenderer(), extensions=EXT_FENCED_CODE)
 
     def test_fenced_code(self):
-        text = self.r.render('```python\ndef foo():\n   pass\n```')
+        text = self.br.render('```python\ndef foo():\n   pass\n```')
         ok(text).contains('unique-python')
+
+    def test_block_quotes(self):
+        text = self.br.render(
+            'A wise man once said:\n\n' \
+            ' > Isn\'t it wonderful just to be alive.\n')
+        ok(text).diff(
+            '<p>A wise man once said:</p>\n' \
+            '<blockquote cite="my">\n<p>Isn&#39;t it wonderful just to be alive.</p>\n</blockquote>')
+
+    def test_raw_block(self):
+        text = self.br.render('<p>raw</p>\n')
+        ok(text).diff('This is html: <p>raw</p>\n')
+
+    def test_header(self):
+        text = self.br.render('custom\n======\n')
+        ok(text).diff('<h1 class="custom">custom</h1>')
+
+    def test_hrule(self):
+        text = self.br.render('* * *')
+        ok(text).diff('HR\n')
+
+    def test_list(self):
+        text = self.br.render('* one\n* two')
+        ok(text).diff('LIST\n[LIST ITEM:one]\n[LIST ITEM:two]\n')
+
+    def test_table(self):
+        # FIXME
+        text = self.tr.render('name | age\n-----|----\nMike | 30')
+        ok(text).diff('TABLE')
+
+    def test_paragraph(self):
+        text = self.pr.render('one\n\ntwo')
+        ok(text).diff('PARAGRAPH:one\nPARAGRAPH:two\n')
 
 
 class MarkdownConformanceTest_10(TestCase):
