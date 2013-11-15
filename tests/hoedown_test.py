@@ -12,8 +12,8 @@ import hoedown
 
 from hoedown import Markdown, BaseRenderer, HtmlRenderer, SmartyPants, \
     EXT_NO_INTRA_EMPHASIS, EXT_TABLES, EXT_FENCED_CODE, EXT_AUTOLINK, \
-    EXT_STRIKETHROUGH, EXT_LAX_SPACING, EXT_SPACE_HEADERS, \
-    EXT_SUPERSCRIPT, \
+    EXT_STRIKETHROUGH, EXT_LAX_SPACING, EXT_SPACE_HEADERS, EXT_QUOTE, \
+    EXT_SUPERSCRIPT, EXT_FOOTNOTES, EXT_UNDERLINE, EXT_HIGHLIGHT, \
     HTML_SKIP_HTML, HTML_SKIP_STYLE, HTML_SKIP_IMAGES, HTML_SKIP_LINKS, \
     HTML_EXPAND_TABS, HTML_SAFELINK, HTML_TOC, HTML_HARD_WRAP, \
     HTML_USE_XHTML, HTML_ESCAPE, \
@@ -272,6 +272,189 @@ This is some awesome code
         ok(self.render_with(text, extensions=EXT_SPACE_HEADERS)).not_contains('<h1>')
 
 
+class MarkdownBlockCustomRendererTest(TestCase):
+    name = 'Markdown Block Custom Renderer'
+    def setup(self):
+        class MyBlockRenderer(HtmlRenderer):
+            def block_code(self, text, lang):
+                return '<pre class="unique-%s">%s</pre>' % (lang, text)
+            def block_quote(self, text):
+                return '<blockquote cite="my">\n%s</blockquote>' % (text)
+            def block_html(self, text):
+                return 'This is html: %s' % (text)
+            def header(self, text, level):
+                return '<h%d class="custom">%s</h%d>' % (level, text, level)
+            def hrule(self):
+                return 'HR\n'
+            def list(self, text, flags):
+                return 'LIST\n%s' % (text)
+            def list_item(self, text, flags):
+                return '[LIST ITEM:%s]\n' % (text.strip())
+            def footnotes(self, text):
+                return '[FOOT: %s]' % (text)
+            def footnote_def(self, text, num):
+                return '[DEF: text=%s, num=%d' % (text, num)
+
+        class MyTableRenderer(HtmlRenderer):
+            def table(self, header, body):
+                return '[TABLE header:%s body:%s]' % (header, body)
+            def table_row(self, text):
+                return '[TABLE ROW: %s]' % text
+            def table_cell(self, text, flag):
+                return '<CELL>%s</CELL>\n' % text
+
+        class MyParagraphRenderer(HtmlRenderer):
+            def paragraph(self, text):
+                return 'PARAGRAPH:%s\n' % text
+
+        self.br = Markdown(MyBlockRenderer(), extensions=EXT_FENCED_CODE|EXT_FOOTNOTES)
+        self.tr = Markdown(MyTableRenderer(), extensions=EXT_FENCED_CODE|EXT_TABLES)
+        self.pr = Markdown(MyParagraphRenderer(), extensions=EXT_FENCED_CODE)
+
+    def test_fenced_code(self):
+        text = self.br.render('```python\ndef foo():\n   pass\n```')
+        ok(text).contains('unique-python')
+
+    def test_block_quotes(self):
+        text = self.br.render(
+            'A wise man once said:\n\n' \
+            ' > Isn\'t it wonderful just to be alive.\n')
+        ok(text).diff(
+            '<p>A wise man once said:</p>\n' \
+            '<blockquote cite="my">\n<p>Isn&#39;t it wonderful just to be alive.</p>\n</blockquote>')
+
+    def test_raw_block(self):
+        text = self.br.render('<p>raw</p>\n')
+        ok(text).diff('This is html: <p>raw</p>\n')
+
+    def test_header(self):
+        text = self.br.render('custom\n======\n')
+        ok(text).diff('<h1 class="custom">custom</h1>')
+
+    def test_hrule(self):
+        text = self.br.render('* * *')
+        ok(text).diff('HR\n')
+
+    def test_list(self):
+        text = self.br.render('* one\n* two')
+        ok(text).diff('LIST\n[LIST ITEM:one]\n[LIST ITEM:two]\n')
+
+    def test_footnotes(self):
+        text = self.br.render('line1 [^1]\n\n [^1]: test1\n       test2\n')
+        ok(text).contains('FOOT')
+        ok(text).contains('DEF')
+
+    def test_table(self):
+        text = self.tr.render('name | age\n-----|----\nMike | 30')
+        ok(text).diff('[TABLE header:[TABLE ROW: <CELL>name</CELL>\n<CELL>age</CELL>\n]'
+                      ' body:[TABLE ROW: <CELL>Mike</CELL>\n<CELL>30</CELL>\n]]')
+
+    def test_paragraph(self):
+        text = self.pr.render('one\n\ntwo')
+        ok(text).diff('PARAGRAPH:one\nPARAGRAPH:two\n')
+
+
+class MarkdownSpanCustomRendererTest(TestCase):
+    name = 'Markdown Span Custom Renderer'
+    def setup(self):
+        class MySpanRenderer(HtmlRenderer):
+            def autolink(self, link, type):
+                return '[AUTOLINK] link=%s, type=%d' % (link, type)
+            def codespan(self, text):
+                return '[CODESPAN] %s' % text
+            def double_emphasis(self, text):
+                return '[DOUBLE EMPHASIS] %s' % text
+            def emphasis(self, text):
+                return '[EMPHASIS] %s' % text
+            def underline(self, text):
+                return '[UNDERLINE] %s' % text
+            def highlight(self, text):
+                return '[HIGHLIGHT] %s' % text
+            def quote(self, text):
+                return '[QUOTE] %s' % text
+            def image(self, link, title, alt):
+                return '[IMG] link=%s, title=%s, alt=%s' % (link, title, alt)
+            def linebreak(self):
+                return '[LB]'
+            def link(self, link, title, content):
+                return 'link=%s, title=%s, cont=%s' % (link, title, content)
+            def raw_html(self, text):
+                return '[RAWHTML]%s' % text
+            def triple_emphasis(self, text):
+                return '[STRONG] %s' % text
+            def strikethrough(self, text):
+                return '[DEL] %s' % text
+            def superscript(self, text):
+                return '[SUP] %s' % text
+            def footnote_ref(self, num):
+                return '[FOOTNOTE_REF] num=%d' % num
+
+        self.sr = Markdown(MySpanRenderer(),
+                           extensions=EXT_AUTOLINK|EXT_UNDERLINE|EXT_HIGHLIGHT|
+                                      EXT_QUOTE|EXT_STRIKETHROUGH|EXT_SUPERSCRIPT|
+                                      EXT_FOOTNOTES)
+
+    def test_autolink(self):
+        text = self.sr.render('<https://github.com/>')
+        ok(text).contains('[AUTOLINK] link=https://github.com/, type=0')
+
+    def test_codespan(self):
+        text = self.sr.render('code `print 1`')
+        ok(text).contains('code [CODESPAN] print 1')
+
+    def test_emphasis(self):
+        text = self.sr.render('*emphasis*')
+        ok(text).contains('[EMPHASIS] emphasis')
+
+    def test_double_emphasis(self):
+        text = self.sr.render('**emphasis**')
+        ok(text).contains('[DOUBLE EMPHASIS] emphasis')
+
+    def test_underline(self):
+        text = self.sr.render('_line_')
+        ok(text).contains('[UNDERLINE] line')
+
+    def test_highlight(self):
+        text = self.sr.render('==line==')
+        ok(text).contains('[HIGHLIGHT] line')
+
+    def test_quote(self):
+        text = self.sr.render('"spanquote"')
+        ok(text).contains('[QUOTE] spanquote')
+
+    def test_image(self):
+        text = self.sr.render('![alt-string](path)')
+        ok(text).contains('[IMG] link=path, title=None, alt=alt-string')
+
+    def test_linebreak(self):
+        text = self.sr.render('test    \ntest\n')
+        ok(text).contains('test[LB]test')
+
+    def test_link(self):
+        text = self.sr.render('[span link](https://github.com/ "github")')
+        ok(text).contains('link=https://github.com/, title=github, cont=span link')
+
+    def test_raw_html(self):
+        text = self.sr.render('<raw>raw_html</raw>')
+        ok(text).contains('[RAWHTML]<raw>raw_html[RAWHTML]</raw>')
+
+    def test_triple_emphasis(self):
+        text = self.sr.render('***triple emphasis***')
+        ok(text).contains('[STRONG] triple emphasis')
+
+    def test_strikethrough(self):
+        text = self.sr.render('~~strikethrough~~')
+        ok(text).contains('[DEL] strikethrough')
+
+    def test_superscript(self):
+        text = self.sr.render('^(superscript)')
+        ok(text).contains('[SUP] superscript')
+
+    def test_footnote_ref(self):
+        text = self.sr.render('line1 [^1]\n\n [^1]: test1\n       test2\n')
+        ok(text).contains('[FOOTNOTE_REF] num=1')
+
+
 class MarkdownConformanceTest_10(TestCase):
     name = 'Markdown Conformance 1.0'
     suite = 'MarkdownTest_1.0'
@@ -336,6 +519,8 @@ def run_tests():
         SmartyPantsTest,
         HtmlRenderTest,
         MarkdownParserTest,
+        MarkdownBlockCustomRendererTest,
+        MarkdownSpanCustomRendererTest,
         MarkdownConformanceTest_10,
         MarkdownConformanceTest_103,
         UnicodeTest

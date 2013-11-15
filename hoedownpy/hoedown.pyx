@@ -10,9 +10,14 @@ EXT_TABLES = (1 << 1)
 EXT_FENCED_CODE = (1 << 2)
 EXT_AUTOLINK = (1 << 3)
 EXT_STRIKETHROUGH = (1 << 4)
+EXT_UNDERLINE = (1 << 5)
 EXT_SPACE_HEADERS = (1 << 6)
 EXT_SUPERSCRIPT = (1 << 7)
 EXT_LAX_SPACING = (1 << 8)
+EXT_DISABLE_INDENTED_CODE = (1 << 9)
+EXT_HIGHLIGHT = (1 << 10)
+EXT_FOOTNOTES = (1 << 11)
+EXT_QUOTE = (1 << 12)
 
 # HTML Render flags
 HTML_SKIP_HTML = (1 << 0)
@@ -127,18 +132,22 @@ cdef class BaseRenderer:
         self.flags = flags
         self.setup()
 
-        # Set callbacks
-        ##cdef void **source = <void **> &wrapper.callback_funcs
-        ##cdef void **dest = <void **> &self.callbacks
+        cdef wrapper.renderopt *options
+        options = <wrapper.renderopt *> self.callbacks.opaque
+        options.self = <void *> self
 
-        ##cdef unicode method_name
-        ##for i from 0 <= i < <int> wrapper.method_count by 1:
-        ##    # In Python 3 ``wrapper.method_names[i]`` is a byte string.
-        ##    # This means hasattr can't find any method in the renderer, so
-        ##    # ``wrapper.method_names[i]`` is converted to a normal string first.
-        ##    method_name = wrapper.method_names[i].decode('utf-8')
-        ##    if hasattr(self, method_name):
-        ##        dest[i] = source[i]
+        # Set callbacks
+        cdef void **source = <void **> &wrapper.callback_funcs
+        cdef void **dest = <void **> self.callbacks
+
+        cdef unicode method_name
+        for i from 0 <= i < <int> wrapper.method_count by 1:
+            # In Python 3 ``wrapper.method_names[i]`` is a byte string.
+            # This means hasattr can't find any method in the renderer, so
+            # ``wrapper.method_names[i]`` is converted to a normal string first.
+            method_name = wrapper.method_names[i].decode('utf-8')
+            if hasattr(self, method_name):
+                dest[i] = source[i]
 
     def setup(self):
         """A method that can be overridden by the renderer that sublasses ``BaseRenderer``.
@@ -186,7 +195,7 @@ cdef class Markdown:
             raise ValueError('expected instance of BaseRenderer, %s found' % \
                 renderer.__class__.__name__)
 
-        self.renderer = <BaseRenderer> renderer
+        self.renderer = renderer
         self.markdown = _hoedown.hoedown_markdown_new(
             extensions, 16,
             self.renderer.callbacks)
