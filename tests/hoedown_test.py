@@ -295,6 +295,16 @@ class MarkdownBlockCustomRendererTest(TestCase):
             def footnote_def(self, text, num):
                 return '[DEF: text=%s, num=%d' % (text, num)
 
+        class MySpanRenderer(HtmlRenderer):
+            def autolink(self, link, is_email):
+                return '[link: %s][Email: %s]' % (link, is_email)
+            def codespan(self, code):
+                return '<span>%s</span>' % code
+            def double_emphasis(self, text):
+                return '||%s||' % text
+            def emphasis(self, text):
+                return '<e>%s</e>' % text
+
         class MyTableRenderer(HtmlRenderer):
             def table(self, header, body):
                 return '[TABLE header:%s body:%s]' % (header, body)
@@ -310,6 +320,7 @@ class MarkdownBlockCustomRendererTest(TestCase):
         self.br = Markdown(MyBlockRenderer(), extensions=EXT_FENCED_CODE|EXT_FOOTNOTES)
         self.tr = Markdown(MyTableRenderer(), extensions=EXT_FENCED_CODE|EXT_TABLES)
         self.pr = Markdown(MyParagraphRenderer(), extensions=EXT_FENCED_CODE)
+        self.sp = Markdown(MySpanRenderer(), extensions=EXT_AUTOLINK)
 
     def test_fenced_code(self):
         text = self.br.render('```python\ndef foo():\n   pass\n```')
@@ -352,6 +363,22 @@ class MarkdownBlockCustomRendererTest(TestCase):
     def test_paragraph(self):
         text = self.pr.render('one\n\ntwo')
         ok(text).diff('PARAGRAPH:one\nPARAGRAPH:two\n')
+
+    def test_autolink(self):
+        text = self.sp.render('visit http://www.python.org/ for more')
+        ok(text).contains('Email: False')
+
+    def test_codespan(self):
+        text = self.sp.render('foo `bar` is')
+        ok(text).contains('<span>bar</span>')
+
+    def test_double_emphasis(self):
+        text = self.sp.render('foo **bar** is')
+        ok(text).contains('||bar||')
+
+    def test_emphasis(self):
+        text = self.sp.render('foo *bar* is')
+        ok(text).contains('<e>bar</e>')
 
 
 class MarkdownSpanCustomRendererTest(TestCase):
