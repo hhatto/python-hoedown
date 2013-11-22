@@ -155,6 +155,10 @@ cdef class BaseRenderer:
         """
         pass
 
+    def __dealloc__(self):
+        if self.callbacks is not NULL:
+            _hoedown.hoedown_html_renderer_free(self.callbacks)
+
 
 cdef class HtmlRenderer(BaseRenderer):
     """The HTML renderer that's included in Sundown.

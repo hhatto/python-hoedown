@@ -21,6 +21,7 @@ cdef extern from '_hoedown/src/html.h':
         int nesting_level)
     hoedown_renderer *hoedown_html_toc_renderer_new(
         int nesting_level)
+    void hoedown_html_renderer_free(hoedown_renderer *renderer)
     void hoedown_html_smartypants(
         hoedown_buffer *ob,
         uint8_t *text,
