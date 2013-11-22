@@ -180,7 +180,7 @@ cdef class HtmlTocRenderer(BaseRenderer):
 
     :param flags: Adjust HTML rendering behaviour with the ``HTML_*`` constants.
     """
-    def setup(self, int flags=0):
+    def setup(self):
         self.callbacks = _hoedown.hoedown_html_toc_renderer_new(0)
 
 
