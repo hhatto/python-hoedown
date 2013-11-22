@@ -2,7 +2,12 @@ from invoke import run, task
 
 
 @task
-def compile_cython(j=False):
+def clean():
+    run("python setup.py clean")
+
+
+@task
+def compile_cython():
     run("python setup.py compile_cython")
 
 
@@ -21,6 +26,12 @@ def update():
 
 @task
 def install():
+    run("pip install --upgrade .")
+
+
+@task
+def all():
+    clean()
     update()
     compile_cython()
-    run("pip install --upgrade .")
+    install()
