@@ -30,6 +30,11 @@ def install():
 
 
 @task
+def tests():
+    run("python tests/hoedown_test.py")
+
+
+@task
 def all():
     clean()
     update()
