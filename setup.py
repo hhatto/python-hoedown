@@ -36,7 +36,7 @@ class CythonCommand(BaseCommand):
     def run(self):
         try:
             from Cython.Compiler.Main import compile
-            for f in ("hoedown.pyx", "wrapper.pxd"):
+            for f in ("hoedown.pyx", ):
                 path = os.path.join(dirname, 'hoedownpy', f)
                 print('compiling %s' % path)
                 compile(path)
@@ -89,7 +89,6 @@ setup(
     ext_modules=[Extension('hoedown', [
         'hoedownpy/hoedown.c',
         'hoedownpy/wrapper.c',
-        'hoedownpy/cb.c',
         'hoedownpy/_hoedown/src/html.c',
         'hoedownpy/_hoedown/src/stack.c',
         'hoedownpy/_hoedown/src/markdown.c',
