@@ -35,11 +35,11 @@ class CythonCommand(BaseCommand):
     description = 'compile Cython files(s) into C file(s)'
     def run(self):
         try:
-            from Cython.Compiler.Main import compile
-            for f in ("hoedown.pyx", ):
-                path = os.path.join(dirname, 'hoedownpy', f)
-                print('compiling %s' % path)
-                compile(path)
+            from Cython.Compiler.Main import compile as cython_compile, CompilationOptions, Options
+            Options.generate_cleanup_code = 3
+            options = CompilationOptions(timestamps=True)
+            paths = [os.path.join(dirname, 'hoedownpy', f) for f in ("hoedown.pyx", )]
+            cython_compile(paths, options)
         except ImportError:
             print('Cython is not installed. Please install Cython first.')
 
