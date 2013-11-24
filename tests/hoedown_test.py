@@ -16,8 +16,7 @@ from hoedown import Markdown, BaseRenderer, HtmlRenderer, SmartyPants, \
     EXT_SUPERSCRIPT, EXT_FOOTNOTES, EXT_UNDERLINE, EXT_HIGHLIGHT, \
     HTML_SKIP_HTML, HTML_SKIP_STYLE, HTML_SKIP_IMAGES, HTML_SKIP_LINKS, \
     HTML_EXPAND_TABS, HTML_SAFELINK, HTML_TOC, HTML_HARD_WRAP, \
-    HTML_USE_XHTML, HTML_ESCAPE, \
-    HTML_SMARTYPANTS
+    HTML_USE_XHTML, HTML_ESCAPE, HTML_SMARTYPANTS
 
 from minitest import TestCase, ok, runner
 
@@ -73,6 +72,7 @@ class HtmlRenderTest(TestCase):
             HTML_SKIP_IMAGES: HtmlRenderer(HTML_SKIP_IMAGES),
             HTML_SKIP_LINKS: HtmlRenderer(HTML_SKIP_LINKS),
             HTML_SAFELINK: HtmlRenderer(HTML_SAFELINK),
+            HTML_USE_XHTML: HtmlRenderer(HTML_USE_XHTML),
             HTML_ESCAPE: HtmlRenderer(HTML_ESCAPE),
             HTML_HARD_WRAP: HtmlRenderer(HTML_HARD_WRAP)
         }
@@ -129,6 +129,10 @@ this is just a simple test
 With hard wraps
 and other *things*.''')
         ok(markdown).contains('<br>')
+
+    def test_use_xhtml(self):
+        markdown = self.render_with(HTML_USE_XHTML, '# h1\n\nline\n\n---\n\nline')
+        ok(markdown).contains('<hr/>')
 
 
 class MarkdownParserTest(TestCase):
