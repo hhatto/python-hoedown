@@ -133,6 +133,17 @@ rndr_table(hoedown_buffer *ob, const hoedown_buffer *header, const hoedown_buffe
     PROCESS_BLOCK("table", PY_STR(header), PY_STR(body), NULL);
 }
 
+static void
+rndr_table_header(hoedown_buffer *ob, const hoedown_buffer *text, const void *opaque)
+{
+    PROCESS_BLOCK("table_header", PY_STR(text), NULL);
+}
+
+static void
+rndr_table_body(hoedown_buffer *ob, const hoedown_buffer *text, const void *opaque)
+{
+    PROCESS_BLOCK("table_body", PY_STR(text), NULL);
+}
 
 static void
 rndr_tablerow(hoedown_buffer *ob, const hoedown_buffer *text, const void *opaque)
@@ -235,9 +246,9 @@ rndr_linebreak(hoedown_buffer *ob, const void *opaque)
 
 
 static int
-rndr_link(hoedown_buffer *ob, const hoedown_buffer *link, const hoedown_buffer *title, const hoedown_buffer *content, const void *opaque)
+rndr_link(hoedown_buffer *ob, const hoedown_buffer *content, const hoedown_buffer *link, const hoedown_buffer *title, const void *opaque)
 {
-    PROCESS_SPAN("link", PY_STR(link), PY_STR(title), PY_STR(content), NULL);
+    PROCESS_SPAN("link", PY_STR(content), PY_STR(link), PY_STR(title), NULL);
 }
 
 
@@ -249,30 +260,36 @@ rndr_raw_html(hoedown_buffer *ob, const hoedown_buffer *text, const void *opaque
 
 
 static int
-rndr_triple_emphasis(hoedown_buffer *ob, const hoedown_buffer *text, void *opaque)
+rndr_triple_emphasis(hoedown_buffer *ob, const hoedown_buffer *text, const void *opaque)
 {
     PROCESS_SPAN("triple_emphasis", PY_STR(text), NULL);
 }
 
 
 static int
-rndr_strikethrough(hoedown_buffer *ob, const hoedown_buffer *text, void *opaque)
+rndr_strikethrough(hoedown_buffer *ob, const hoedown_buffer *text, const void *opaque)
 {
     PROCESS_SPAN("strikethrough", PY_STR(text), NULL);
 }
 
 
 static int
-rndr_superscript(hoedown_buffer *ob, const hoedown_buffer *text, void *opaque)
+rndr_superscript(hoedown_buffer *ob, const hoedown_buffer *text, const void *opaque)
 {
     PROCESS_SPAN("superscript", PY_STR(text), NULL);
 }
 
 
 static int
-rndr_footnote_ref(hoedown_buffer *ob, unsigned int num, void *opaque)
+rndr_footnote_ref(hoedown_buffer *ob, unsigned int num, const void *opaque)
 {
     PROCESS_SPAN("footnote_ref", PY_INT(num), NULL);
+}
+
+static int
+rndr_math(hoedown_buffer *ob, const hoedown_buffer *text, int displaymode, const void *opaque)
+{
+    PROCESS_SPAN("math", PY_STR(text), NULL);
 }
 
 
@@ -281,48 +298,53 @@ rndr_footnote_ref(hoedown_buffer *ob, unsigned int num, void *opaque)
 
 
 static void
-rndr_entity(hoedown_buffer *ob, const hoedown_buffer *text, void *opaque)
+rndr_entity(hoedown_buffer *ob, const hoedown_buffer *text, const void *opaque)
 {
     PROCESS_BLOCK("entity", PY_STR(text), NULL);
 }
 
 
 static void
-rndr_normal_text(hoedown_buffer *ob, const hoedown_buffer *text, void *opaque)
+rndr_normal_text(hoedown_buffer *ob, const hoedown_buffer *text, const void *opaque)
 {
     PROCESS_BLOCK("normal_text", PY_STR(text), NULL);
 }
 
 
 static void
-rndr_doc_header(hoedown_buffer *ob, void *opaque)
+rndr_doc_header(hoedown_buffer *ob, const void *opaque)
 {
     PROCESS_BLOCK("doc_header", NULL);
 }
 
 
 static void
-rndr_doc_footer(hoedown_buffer *ob, void *opaque)
+rndr_doc_footer(hoedown_buffer *ob, const void *opaque)
 {
     PROCESS_BLOCK("doc_footer", NULL);
 }
 
 
 struct hoedown_renderer callback_funcs = {
+    /* state object */
+    NULL,
+
     /* block level callbacks */
     rndr_blockcode,
     rndr_blockquote,
-    rndr_raw_block,
     rndr_header,
     rndr_hrule,
     rndr_list,
     rndr_listitem,
     rndr_paragraph,
     rndr_table,
+	rndr_table_header,
+	rndr_table_body,
     rndr_tablerow,
     rndr_tablecell,
     rndr_footnotes,
     rndr_footnote_def,
+    rndr_raw_block,
 
     /* span level callbacks */
     rndr_autolink,
@@ -335,11 +357,12 @@ struct hoedown_renderer callback_funcs = {
     rndr_image,
     rndr_linebreak,
     rndr_link,
-    rndr_raw_html,
     rndr_triple_emphasis,
     rndr_strikethrough,
     rndr_superscript,
     rndr_footnote_ref,
+    rndr_math,
+    rndr_raw_html,
 
     /* low level callbacks */
     rndr_entity,
@@ -348,9 +371,6 @@ struct hoedown_renderer callback_funcs = {
     /* header and footer */
     rndr_doc_header,
     rndr_doc_footer,
-
-    /* state object */
-    NULL,
 };
 
 
@@ -358,17 +378,19 @@ const char *method_names[] = {
     /* block level */
     "block_code",
     "block_quote",
-    "block_html",
     "header",
     "hrule",
     "list",
     "list_item",
     "paragraph",
     "table",
+    "table_header",
+    "table_body",
     "table_row",
     "table_cell",
     "footnotes",
     "footnote_def",
+    "block_html",
 
     /* span level */
     "autolink",
@@ -381,11 +403,12 @@ const char *method_names[] = {
     "image",
     "linebreak",
     "link",
-    "raw_html",
     "triple_emphasis",
     "strikethrough",
     "superscript",
     "footnote_ref",
+    "math",
+    "raw_html_tag",
 
     /* low level */
     "entity",
@@ -397,5 +420,4 @@ const char *method_names[] = {
 };
 
 
-const size_t method_count = sizeof(
-    method_names)/sizeof(char *);
+const size_t method_count = sizeof(method_names)/sizeof(char *);

@@ -769,7 +769,7 @@ static char __pyx_k_EXT_SPACE_HEADERS[] = "EXT_SPACE_HEADERS";
 static char __pyx_k_EXT_STRIKETHROUGH[] = "EXT_STRIKETHROUGH";
 static char __pyx_k_EXT_NO_INTRA_EMPHASIS[] = "EXT_NO_INTRA_EMPHASIS";
 static char __pyx_k_EXT_DISABLE_INDENTED_CODE[] = "EXT_DISABLE_INDENTED_CODE";
-static char __pyx_k_Users_hattori_h_python_hoedown[] = "/Users/hattori-h/python-hoedown/hoedownpy/hoedown.pyx";
+static char __pyx_k_home_vagrant_work_python_hoedow[] = "/home/vagrant/work/python-hoedown.readonly/hoedownpy/hoedown.pyx";
 static char __pyx_k_expected_instance_of_BaseRendere[] = "expected instance of BaseRenderer, %s found";
 static PyObject *__pyx_n_s_EXT_AUTOLINK;
 static PyObject *__pyx_n_s_EXT_DISABLE_INDENTED_CODE;
@@ -802,7 +802,6 @@ static PyObject *__pyx_n_s_TABLE_ALIGN_L;
 static PyObject *__pyx_n_s_TABLE_ALIGN_R;
 static PyObject *__pyx_n_s_TABLE_HEADER;
 static PyObject *__pyx_kp_s_UTF_8;
-static PyObject *__pyx_kp_s_Users_hattori_h_python_hoedown;
 static PyObject *__pyx_n_s_ValueError;
 static PyObject *__pyx_n_s_class;
 static PyObject *__pyx_n_s_encode;
@@ -810,6 +809,7 @@ static PyObject *__pyx_kp_s_expected_instance_of_BaseRendere;
 static PyObject *__pyx_n_s_extensions;
 static PyObject *__pyx_n_s_flags;
 static PyObject *__pyx_n_s_hoedown;
+static PyObject *__pyx_kp_s_home_vagrant_work_python_hoedow;
 static PyObject *__pyx_n_s_html;
 static PyObject *__pyx_n_s_main;
 static PyObject *__pyx_n_s_markdown;
@@ -2937,7 +2937,6 @@ static __Pyx_StringTabEntry __pyx_string_tab[] = {
   {&__pyx_n_s_TABLE_ALIGN_R, __pyx_k_TABLE_ALIGN_R, sizeof(__pyx_k_TABLE_ALIGN_R), 0, 0, 1, 1},
   {&__pyx_n_s_TABLE_HEADER, __pyx_k_TABLE_HEADER, sizeof(__pyx_k_TABLE_HEADER), 0, 0, 1, 1},
   {&__pyx_kp_s_UTF_8, __pyx_k_UTF_8, sizeof(__pyx_k_UTF_8), 0, 0, 1, 0},
-  {&__pyx_kp_s_Users_hattori_h_python_hoedown, __pyx_k_Users_hattori_h_python_hoedown, sizeof(__pyx_k_Users_hattori_h_python_hoedown), 0, 0, 1, 0},
   {&__pyx_n_s_ValueError, __pyx_k_ValueError, sizeof(__pyx_k_ValueError), 0, 0, 1, 1},
   {&__pyx_n_s_class, __pyx_k_class, sizeof(__pyx_k_class), 0, 0, 1, 1},
   {&__pyx_n_s_encode, __pyx_k_encode, sizeof(__pyx_k_encode), 0, 0, 1, 1},
@@ -2945,6 +2944,7 @@ static __Pyx_StringTabEntry __pyx_string_tab[] = {
   {&__pyx_n_s_extensions, __pyx_k_extensions, sizeof(__pyx_k_extensions), 0, 0, 1, 1},
   {&__pyx_n_s_flags, __pyx_k_flags, sizeof(__pyx_k_flags), 0, 0, 1, 1},
   {&__pyx_n_s_hoedown, __pyx_k_hoedown, sizeof(__pyx_k_hoedown), 0, 0, 1, 1},
+  {&__pyx_kp_s_home_vagrant_work_python_hoedow, __pyx_k_home_vagrant_work_python_hoedow, sizeof(__pyx_k_home_vagrant_work_python_hoedow), 0, 0, 1, 0},
   {&__pyx_n_s_html, __pyx_k_html, sizeof(__pyx_k_html), 0, 0, 1, 1},
   {&__pyx_n_s_main, __pyx_k_main, sizeof(__pyx_k_main), 0, 0, 1, 1},
   {&__pyx_n_s_markdown, __pyx_k_markdown, sizeof(__pyx_k_markdown), 0, 0, 1, 1},
@@ -3004,7 +3004,7 @@ static int __Pyx_InitCachedConstants(void) {
   __pyx_tuple__4 = PyTuple_Pack(6, __pyx_n_s_text, __pyx_n_s_extensions, __pyx_n_s_render_flags, __pyx_n_s_renderer, __pyx_n_s_markdown, __pyx_n_s_result); if (unlikely(!__pyx_tuple__4)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 46; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
   __Pyx_GOTREF(__pyx_tuple__4);
   __Pyx_GIVEREF(__pyx_tuple__4);
-  __pyx_codeobj__5 = (PyObject*)__Pyx_PyCode_New(3, 0, 6, 0, 0, __pyx_empty_bytes, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_tuple__4, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_kp_s_Users_hattori_h_python_hoedown, __pyx_n_s_html, 46, __pyx_empty_bytes); if (unlikely(!__pyx_codeobj__5)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 46; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+  __pyx_codeobj__5 = (PyObject*)__Pyx_PyCode_New(3, 0, 6, 0, 0, __pyx_empty_bytes, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_tuple__4, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_kp_s_home_vagrant_work_python_hoedow, __pyx_n_s_html, 46, __pyx_empty_bytes); if (unlikely(!__pyx_codeobj__5)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 46; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
   __Pyx_RefNannyFinishContext();
   return 0;
   __pyx_L1_error:;

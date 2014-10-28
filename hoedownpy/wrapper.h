@@ -2,6 +2,8 @@
 #include <Python.h>
 
 struct rndr_state {
+    void *opaque;
+
     struct {
         int header_count;
         int current_level;
