@@ -91,7 +91,7 @@ setup(
         'hoedownpy/wrapper.c',
         'hoedownpy/_hoedown/src/html.c',
         'hoedownpy/_hoedown/src/stack.c',
-        'hoedownpy/_hoedown/src/markdown.c',
+        'hoedownpy/_hoedown/src/document.c',
         'hoedownpy/_hoedown/src/html_smartypants.c',
         'hoedownpy/_hoedown/src/html_blocks.c',
         'hoedownpy/_hoedown/src/escape.c',

@@ -28,14 +28,14 @@ cdef extern from '_hoedown/src/html.h':
         size_t size)
 
 
-cdef extern from '_hoedown/src/markdown.h':
+cdef extern from '_hoedown/src/document.h':
     enum hoedown_autolink:
         pass
 
     struct hoedown_renderer:
         # Block level callbacks - NULL skips the block
-        void (*blockcode)(hoedown_buffer *ob, hoedown_buffer *text, hoedown_buffer *lang, void *opaque)
-        void (*blockquote)(hoedown_buffer *ob, hoedown_buffer *text, void *opaque)
+        void (*blockcode)(hoedown_buffer *ob, hoedown_buffer *text, hoedown_buffer *lang, const void *opaque)
+        void (*blockquote)(hoedown_buffer *ob, hoedown_buffer *text, const void *opaque)
         void (*blockhtml)(hoedown_buffer *ob, hoedown_buffer *text, void *opaque)
         void (*header)(hoedown_buffer *ob, hoedown_buffer *text, int level, void *opaque)
         void (*hrule)(hoedown_buffer *ob, void *opaque)
@@ -79,17 +79,20 @@ cdef extern from '_hoedown/src/markdown.h':
     enum hoedown_autolink:
         pass
 
-    struct hoedown_markdown:
+    enum hoedown_extensions:
         pass
 
-    hoedown_markdown *hoedown_markdown_new(
-        unsigned int extensions,
-        size_t max_nesting,
-        hoedown_renderer *callbacks)
-    void hoedown_markdown_render(
+    struct hoedown_document:
+        pass
+
+    hoedown_document *hoedown_document_new(
+        hoedown_renderer *callbacks,
+        hoedown_extensions extensions,
+        size_t max_nesting)
+    void hoedown_document_render(
+        hoedown_document *doc,
         hoedown_buffer *ob,
-        const uint8_t *document,
-        size_t doc_size,
-        hoedown_markdown *md)
-    void hoedown_markdown_free(hoedown_markdown *md)
+        const uint8_t *data,
+        size_t doc_size)
+    void hoedown_document_free(hoedown_document *doc)
     void hoedown_version(int *major, int *minor, int *revision)

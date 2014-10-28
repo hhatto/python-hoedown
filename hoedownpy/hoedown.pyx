@@ -191,18 +191,16 @@ cdef class Markdown:
     :param extensions: Enable additional Markdown extensions with the ``EXT_*`` constants.
     """
 
-    cdef _hoedown.hoedown_markdown *markdown
+    cdef _hoedown.hoedown_document *document
     cdef BaseRenderer renderer
 
-    def __cinit__(self, object renderer, int extensions=0):
+    def __cinit__(self, object renderer, _hoedown.hoedown_extensions extensions=<_hoedown.hoedown_extensions>0):
         if not isinstance(renderer, BaseRenderer):
             raise ValueError('expected instance of BaseRenderer, %s found' % \
                 renderer.__class__.__name__)
 
         self.renderer = renderer
-        self.markdown = _hoedown.hoedown_markdown_new(
-            extensions, 16,
-            self.renderer.callbacks)
+        self.document = _hoedown.hoedown_document_new(self.renderer.callbacks, extensions, 16)
 
     def render(self, object text):
         """Render the Markdon text.
@@ -223,14 +221,14 @@ cdef class Markdown:
         cdef char *c_string = py_string
 
         # Buffers
-        cdef _hoedown.hoedown_buffer *ib = _hoedown.hoedown_buffer_new(128)
+        cdef _hoedown.hoedown_buffer *ib = _hoedown.hoedown_buffer_new(1024)
         _hoedown.hoedown_buffer_puts(ib, c_string)
 
         cdef _hoedown.hoedown_buffer *ob = _hoedown.hoedown_buffer_new(128)
         _hoedown.hoedown_buffer_grow(ob, <size_t> (ib.size * 1.4))
 
         # Parse! And make a unicode string
-        _hoedown.hoedown_markdown_render(ob, ib.data, ib.size, self.markdown)
+        _hoedown.hoedown_document_render(self.document, ob, ib.data, ib.size)
         text = (<char *> ob.data)[:ob.size].decode('UTF-8', 'strict')
 
         if hasattr(self.renderer, 'postprocess'):
@@ -244,5 +242,5 @@ cdef class Markdown:
             _hoedown.hoedown_buffer_free(ib)
 
     def __dealloc__(self):
-        if self.markdown is not NULL:
-            _hoedown.hoedown_markdown_free(self.markdown)
+        if self.document is not NULL:
+            _hoedown.hoedown_document_free(self.document)
