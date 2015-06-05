@@ -4,23 +4,24 @@ CFLAGS = /O2 /sdl /Isrc /D_CRT_SECURE_NO_WARNINGS
 HOEDOWN_SRC = \
 	src\autolink.obj \
 	src\buffer.obj \
+	src\document.obj \
 	src\escape.obj \
 	src\html.obj \
 	src\html_blocks.obj \
 	src\html_smartypants.obj \
-	src\markdown.obj \
-	src\stack.obj
+	src\stack.obj \
+	src\version.obj
 
 all: hoedown.dll hoedown.exe smartypants.exe
 
 hoedown.dll: $(HOEDOWN_SRC) hoedown.def
 	$(CC) $(HOEDOWN_SRC) hoedown.def /link /DLL $(LDFLAGS) /out:$@
 
-hoedown.exe: examples\hoedown.obj $(HOEDOWN_SRC)
-	$(CC) examples\hoedown.obj $(HOEDOWN_SRC) /link $(LDFLAGS) /out:$@
+hoedown.exe: bin\hoedown.obj $(HOEDOWN_SRC)
+	$(CC) bin\hoedown.obj $(HOEDOWN_SRC) /link $(LDFLAGS) /out:$@
 
-smartypants.exe: examples\smartypants.obj $(HOEDOWN_SRC)
-	$(CC) examples\smartypants.obj $(HOEDOWN_SRC) /link $(LDFLAGS) /out:$@
+smartypants.exe: bin\smartypants.obj $(HOEDOWN_SRC)
+	$(CC) bin\smartypants.obj $(HOEDOWN_SRC) /link $(LDFLAGS) /out:$@
 
 # Housekeeping
 
@@ -33,3 +34,8 @@ clean:
 
 .c.obj:
 	$(CC) $(CFLAGS) /c $< /Fo$@
+
+# Testing
+
+test: hoedown.exe
+	python test\runner.py
