@@ -5,31 +5,28 @@ from libc.stdint cimport uint8_t
 
 
 # Markdown extensions
-EXT_NO_INTRA_EMPHASIS = (1 << 0)
-EXT_TABLES = (1 << 1)
-EXT_FENCED_CODE = (1 << 2)
+EXT_TABLES = (1 << 0)
+EXT_FENCED_CODE = (1 << 1)
+EXT_FOOTNOTES = (1 << 2)
+
 EXT_AUTOLINK = (1 << 3)
 EXT_STRIKETHROUGH = (1 << 4)
 EXT_UNDERLINE = (1 << 5)
-EXT_SPACE_HEADERS = (1 << 6)
-EXT_SUPERSCRIPT = (1 << 7)
-EXT_LAX_SPACING = (1 << 8)
-EXT_DISABLE_INDENTED_CODE = (1 << 9)
-EXT_HIGHLIGHT = (1 << 10)
-EXT_FOOTNOTES = (1 << 11)
-EXT_QUOTE = (1 << 12)
+EXT_HIGHLIGHT = (1 << 6)
+EXT_QUOTE = (1 << 7)
+EXT_SUPERSCRIPT = (1 << 8)
+EXT_MATH = (1 << 9)
 
-# HTML Render flags
+EXT_NO_INTRA_EMPHASIS = (1 << 11)
+EXT_SPACE_HEADERS = (1 << 12)
+EXT_MATH_EXPLICIT = (1 << 13)
+
+EXT_DISABLE_INDENTED_CODE = (1 << 14)
+
 HTML_SKIP_HTML = (1 << 0)
-HTML_SKIP_STYLE = (1 << 1)
-HTML_SKIP_IMAGES = (1 << 2)
-HTML_SKIP_LINKS = (1 << 3)
-HTML_EXPAND_TABS = (1 << 4)
-HTML_SAFELINK = (1 << 5)
-HTML_TOC = (1 << 6)
-HTML_HARD_WRAP = (1 << 7)
-HTML_USE_XHTML = (1 << 8)
-HTML_ESCAPE = (1 << 9)
+HTML_ESCAPE = (1 << 1)
+HTML_HARD_WRAP = (1 << 2)
+HTML_USE_XHTML = (1 << 3)
 
 # Extra HTML render flags - these are not from Sundown
 HTML_SMARTYPANTS = (1 << 10)  # An extra flag to enable Smartypants
