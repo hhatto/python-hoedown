@@ -1,23 +1,23 @@
 language: python
+
 python:
- - 2.7
- - 3.2
- - 3.3
- - pypy
+    - 2.7
+    - 3.5
+    - pypy
 
 before_install:
  - sudo apt-get install tidy
 
 install:
- - python setup.py install
+    - pip install --upgrade .
 
 script:
- - pip install --quiet coverage coveralls
- - coverage erase
- - HOEDOWN_COVERAGE=1 coverage run --branch --parallel-mode --omit='*/site-packages/*' tests/hoedown_test.py
- - coverage combine
+    - pip install --quiet coverage coveralls
+    - coverage erase
+    - HOEDOWN_COVERAGE=1 coverage run --branch --parallel-mode --omit='*/site-packages/*' tests/hoedown_test.py
+    - coverage combine
 
 after_success:
- - coverage report --show-missing
- - coverage xml --include=hoedown.py
- - coveralls
+    - coverage report --show-missing
+    - coverage xml --include=hoedown.py
+    - coveralls
