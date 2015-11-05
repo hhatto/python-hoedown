@@ -32,10 +32,13 @@ Features
 
 	`Hoedown` has been extensively security audited, and includes protection against
 	all possible DOS attacks (stack overflows, out of memory situations, malformed
-	Markdown syntax...) and against client attacks through malicious embedded HTML.
+	Markdown syntax...).
 
-	We've worked very hard to make `Hoedown` never crash or run out of memory
-	under *any* input.
+	We've worked very hard to make `Hoedown` never leak or crash under *any* input.
+
+	**Warning**: `Hoedown` doesn't validate or post-process the HTML in Markdown documents.
+	Unless you use `HTML_ESCAPE` or `HTML_SKIP`, you should strongly consider using a
+	good post-processor in conjunction with Hoedown to prevent client-side attacks.
 
 *	**Customizable renderers**
 
@@ -51,8 +54,13 @@ Features
 
 *	**Zero-dependency**
 
-	`Hoedown` is a zero-dependency library composed of 4 `.c` files and their headers.
-	No dependencies, no bullshit. Only standard C99 that builds everywhere.
+	`Hoedown` is a zero-dependency library composed of some `.c` files and their
+	headers. No dependencies, no bullshit. Only standard C99 that builds everywhere.
+
+*	**Additional features**
+
+	`Hoedown` comes with a fully functional implementation of SmartyPants,
+	a separate autolinker, escaping utilities, buffers and stacks.
 
 Bindings
 --------
@@ -66,8 +74,10 @@ Help us
 -------
 
 `Hoedown` is all about security. If you find a (potential) security vulnerability in the
-library, or a way to make it crash through malicious input, please report it to us,
-by leaving an [Issue](https://github.com/hoedown/hoedown/issues/new).
+library, or a way to make it crash through malicious input, please report it to us by
+emailing the private [Hoedown Security](mailto:hoedown-security@googlegroups.com)
+mailing list. The `Hoedown` security team will review the vulnerability and work with you
+to reproduce and resolve it.
 
 Unicode character handling
 --------------------------
@@ -85,12 +95,10 @@ features:
 Install
 -------
 
-There is nothing to install. `Hoedown` is composed of 4 `.c` files (`markdown.c`,
-`buffer.c`, `stack.c`, and `autolink.c`) and their headers, so just throw them in your
-project. Zero-dependency means zero-dependency. You might want to include `html.c`,
-`html_smartypants.c` and `escape.c` if you want to use the included XHTML renderer, or
-write your own renderer. Either way, it's all fun and joy.
+Just typing `make` will build `Hoedown` into a dynamic library and create the `hoedown`
+and `smartypants` executables, which are command-line tools to render Markdown to HTML
+and perform SmartyPants, respectively.
 
-If you are hardcore, you can use the included `Makefile` to build `Hoedown` into a dynamic
-library, or to build the sample `hoedown` executable, which is just a commandline
-Markdown to XHTML parser.
+If you are using [CocoaPods](http://cocoapods.org), just add the line `pod 'hoedown'` to your Podfile and call `pod install`.
+
+Or, if you prefer, you can just throw the files at `src` into your project.

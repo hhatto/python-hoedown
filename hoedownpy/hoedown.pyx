@@ -5,31 +5,28 @@ from libc.stdint cimport uint8_t
 
 
 # Markdown extensions
-EXT_NO_INTRA_EMPHASIS = (1 << 0)
-EXT_TABLES = (1 << 1)
-EXT_FENCED_CODE = (1 << 2)
+EXT_TABLES = (1 << 0)
+EXT_FENCED_CODE = (1 << 1)
+EXT_FOOTNOTES = (1 << 2)
+
 EXT_AUTOLINK = (1 << 3)
 EXT_STRIKETHROUGH = (1 << 4)
 EXT_UNDERLINE = (1 << 5)
-EXT_SPACE_HEADERS = (1 << 6)
-EXT_SUPERSCRIPT = (1 << 7)
-EXT_LAX_SPACING = (1 << 8)
-EXT_DISABLE_INDENTED_CODE = (1 << 9)
-EXT_HIGHLIGHT = (1 << 10)
-EXT_FOOTNOTES = (1 << 11)
-EXT_QUOTE = (1 << 12)
+EXT_HIGHLIGHT = (1 << 6)
+EXT_QUOTE = (1 << 7)
+EXT_SUPERSCRIPT = (1 << 8)
+EXT_MATH = (1 << 9)
 
-# HTML Render flags
+EXT_NO_INTRA_EMPHASIS = (1 << 11)
+EXT_SPACE_HEADERS = (1 << 12)
+EXT_MATH_EXPLICIT = (1 << 13)
+
+EXT_DISABLE_INDENTED_CODE = (1 << 14)
+
 HTML_SKIP_HTML = (1 << 0)
-HTML_SKIP_STYLE = (1 << 1)
-HTML_SKIP_IMAGES = (1 << 2)
-HTML_SKIP_LINKS = (1 << 3)
-HTML_EXPAND_TABS = (1 << 4)
-HTML_SAFELINK = (1 << 5)
-HTML_TOC = (1 << 6)
-HTML_HARD_WRAP = (1 << 7)
-HTML_USE_XHTML = (1 << 8)
-HTML_ESCAPE = (1 << 9)
+HTML_ESCAPE = (1 << 1)
+HTML_HARD_WRAP = (1 << 2)
+HTML_USE_XHTML = (1 << 3)
 
 # Extra HTML render flags - these are not from Sundown
 HTML_SMARTYPANTS = (1 << 10)  # An extra flag to enable Smartypants
@@ -147,7 +144,7 @@ cdef class BaseRenderer:
             # ``wrapper.method_names[i]`` is converted to a normal string first.
             method_name = wrapper.method_names[i].decode('utf-8')
             if hasattr(self, method_name):
-                dest[i] = source[i]
+                dest[i+1] = source[i+1]
 
     def setup(self):
         """A method that can be overridden by the renderer that sublasses ``BaseRenderer``.
@@ -191,18 +188,16 @@ cdef class Markdown:
     :param extensions: Enable additional Markdown extensions with the ``EXT_*`` constants.
     """
 
-    cdef _hoedown.hoedown_markdown *markdown
+    cdef _hoedown.hoedown_document *document
     cdef BaseRenderer renderer
 
-    def __cinit__(self, object renderer, int extensions=0):
+    def __cinit__(self, object renderer, _hoedown.hoedown_extensions extensions=<_hoedown.hoedown_extensions>0):
         if not isinstance(renderer, BaseRenderer):
             raise ValueError('expected instance of BaseRenderer, %s found' % \
                 renderer.__class__.__name__)
 
         self.renderer = renderer
-        self.markdown = _hoedown.hoedown_markdown_new(
-            extensions, 16,
-            self.renderer.callbacks)
+        self.document = _hoedown.hoedown_document_new(self.renderer.callbacks, extensions, 16)
 
     def render(self, object text):
         """Render the Markdon text.
@@ -223,14 +218,14 @@ cdef class Markdown:
         cdef char *c_string = py_string
 
         # Buffers
-        cdef _hoedown.hoedown_buffer *ib = _hoedown.hoedown_buffer_new(128)
+        cdef _hoedown.hoedown_buffer *ib = _hoedown.hoedown_buffer_new(1024)
         _hoedown.hoedown_buffer_puts(ib, c_string)
 
         cdef _hoedown.hoedown_buffer *ob = _hoedown.hoedown_buffer_new(128)
         _hoedown.hoedown_buffer_grow(ob, <size_t> (ib.size * 1.4))
 
         # Parse! And make a unicode string
-        _hoedown.hoedown_markdown_render(ob, ib.data, ib.size, self.markdown)
+        _hoedown.hoedown_document_render(self.document, ob, ib.data, ib.size)
         text = (<char *> ob.data)[:ob.size].decode('UTF-8', 'strict')
 
         if hasattr(self.renderer, 'postprocess'):
@@ -244,5 +239,5 @@ cdef class Markdown:
             _hoedown.hoedown_buffer_free(ib)
 
     def __dealloc__(self):
-        if self.markdown is not NULL:
-            _hoedown.hoedown_markdown_free(self.markdown)
+        if self.document is not NULL:
+            _hoedown.hoedown_document_free(self.document)

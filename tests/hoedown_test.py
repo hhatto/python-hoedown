@@ -12,11 +12,9 @@ import hoedown
 
 from hoedown import Markdown, BaseRenderer, HtmlRenderer, SmartyPants, \
     EXT_NO_INTRA_EMPHASIS, EXT_TABLES, EXT_FENCED_CODE, EXT_AUTOLINK, \
-    EXT_STRIKETHROUGH, EXT_LAX_SPACING, EXT_SPACE_HEADERS, EXT_QUOTE, \
+    EXT_STRIKETHROUGH, EXT_SPACE_HEADERS, EXT_QUOTE, \
     EXT_SUPERSCRIPT, EXT_FOOTNOTES, EXT_UNDERLINE, EXT_HIGHLIGHT, \
-    HTML_SKIP_HTML, HTML_SKIP_STYLE, HTML_SKIP_IMAGES, HTML_SKIP_LINKS, \
-    HTML_EXPAND_TABS, HTML_SAFELINK, HTML_TOC, HTML_HARD_WRAP, \
-    HTML_USE_XHTML, HTML_ESCAPE, \
+    HTML_SKIP_HTML, HTML_HARD_WRAP, HTML_USE_XHTML, HTML_ESCAPE, \
     HTML_SMARTYPANTS
 
 from minitest import TestCase, ok, runner
@@ -25,7 +23,7 @@ from minitest import TestCase, ok, runner
 def clean_html(dirty_html):
     input_html = dirty_html.encode('utf-8')
     p = Popen(['tidy', '--show-body-only', '1', '--quiet', '1', '--show-warnings', '0', '-utf8'],
-        stdout=PIPE, stdin=PIPE, stderr=STDOUT)
+              stdout=PIPE, stdin=PIPE, stderr=STDOUT)
     stdout, stderr = p.communicate(input=input_html)
 
     return stdout.decode('utf-8')
@@ -70,9 +68,6 @@ class HtmlRenderTest(TestCase):
 
         self.r = {
             HTML_SKIP_HTML: HtmlRenderer(HTML_SKIP_HTML),
-            HTML_SKIP_IMAGES: HtmlRenderer(HTML_SKIP_IMAGES),
-            HTML_SKIP_LINKS: HtmlRenderer(HTML_SKIP_LINKS),
-            HTML_SAFELINK: HtmlRenderer(HTML_SAFELINK),
             HTML_ESCAPE: HtmlRenderer(HTML_ESCAPE),
             HTML_HARD_WRAP: HtmlRenderer(HTML_HARD_WRAP)
         }
@@ -102,24 +97,13 @@ Through <em>NO</em> <script>DOUBLE NO</script>
         ok(markdown).diff(expected)
 
     def test_skip_html(self):
-        markdown = self.render_with(HTML_SKIP_HTML, 'Through <em>NO</em> <script>DOUBLE NO</script>')
+        markdown = self.render_with(HTML_SKIP_HTML,
+                                    'Through <em>NO</em> <script>DOUBLE NO</script>')
         ok(markdown).diff('<p>Through NO DOUBLE NO</p>\n')
 
     def test_skip_html_two_space_hard_break(self):
         markdown = self.render_with(HTML_SKIP_HTML, 'Lorem,  \nipsum\n')
         ok(markdown).diff('<p>Lorem,<br>\nipsum</p>\n')
-
-    def test_skip_image(self):
-        markdown = self.render_with(HTML_SKIP_IMAGES, '![dust mite](http://dust.mite/image.png) <img src="image.png" />')
-        ok(markdown).not_contains('<img')
-
-    def test_skip_links(self):
-        markdown = self.render_with(HTML_SKIP_LINKS, '[This link](http://example.net/) <a href="links.html">links</a>')
-        ok(markdown).not_contains('<a ')
-
-    def test_safelink(self):
-        markdown = self.render_with(HTML_SAFELINK, '[IRC](irc://chat.freenode.org/#freenode)')
-        ok(markdown).diff('<p>[IRC](irc://chat.freenode.org/#freenode)</p>\n')
 
     def test_hard_wrap(self):
         markdown = self.render_with(HTML_HARD_WRAP, '''
@@ -149,9 +133,10 @@ class MarkdownParserTest(TestCase):
         ok(markdown).diff('<p><em>Hello World</em>!</p>\n')
 
     def test_inline_markdown_start_end(self):
-        markdown = self.render_with('_start _ foo_bar bar_baz _ end_ *italic* **bold** <a>_blah_</a>',
-            extensions=EXT_NO_INTRA_EMPHASIS)
-        ok(markdown).diff('<p><em>start _ foo_bar bar_baz _ end</em> <em>italic</em> <strong>bold</strong> <a><em>blah</em></a></p>\n')
+        markdown = self.render_with(
+            '_start _ foo_bar bar_baz _ end_ *italic* **bold** <a>_blah_</a>')
+        ok(markdown).diff('<p>_start _ foo<em>bar bar</em>baz _ end_ '
+                          '<em>italic</em> <strong>bold</strong> <a><em>blah</em></a></p>\n')
 
         markdown = self.r('Run \'rake radiant:extensions:rbac_base:migrate\'')
         ok(markdown).diff('<p>Run &#39;rake radiant:extensions:rbac_base:migrate&#39;</p>\n')
@@ -166,31 +151,28 @@ class MarkdownParserTest(TestCase):
 
     def test_html_block_end_tag_on_same_line(self):
         markdown = self.r('Para 1\n\n<div><pre>HTML block\n</pre></div>\n\nPara 2 [Link](#anchor)')
-        ok(markdown).diff('<p>Para 1</p>\n\n<div><pre>HTML block\n</pre></div>\n\n<p>Para 2 <a href=\"#anchor\">Link</a></p>\n')
+        ok(markdown).diff('<p>Para 1</p>\n\n<div><pre>HTML block\n</pre></div>\n\n'
+                          '<p>Para 2 <a href=\"#anchor\">Link</a></p>\n')
 
     # This isn't in the spec but is Markdown.pl behavior.
     def test_block_quotes_preceded_by_spaces(self):
         markdown = self.r(
-            'A wise man once said:\n\n' \
+            'A wise man once said:\n\n'
             ' > Isn\'t it wonderful just to be alive.\n')
         ok(markdown).diff(
-            '<p>A wise man once said:</p>\n\n' \
+            '<p>A wise man once said:</p>\n\n'
             '<blockquote>\n<p>Isn&#39;t it wonderful just to be alive.</p>\n</blockquote>\n')
 
     def test_html_block_not_wrapped_in_p(self):
-        markdown = self.render_with(
-            'Things to watch out for\n\n' \
-            '<ul>\n<li>Blah</li>\n</ul>\n',
-            extensions=EXT_LAX_SPACING)
-        ok(markdown).diff(
-            '<p>Things to watch out for</p>\n\n' \
-            '<ul>\n<li>Blah</li>\n</ul>\n')
+        markdown = self.render_with('Things to watch out for\n\n<ul>\n<li>Blah</li>\n</ul>\n',
+                                    extensions=0)
+        ok(markdown).diff('<p>Things to watch out for</p>\n\n<ul>\n<li>Blah</li>\n</ul>\n')
 
     # http://github.com/rtomayko/rdiscount/issues/#issue/13
     def test_headings_with_trailing_space(self):
         markdown = self.render_with(
-            'The Ant-Sugar Tales \n' \
-            '=================== \n\n' \
+            'The Ant-Sugar Tales \n'
+            '=================== \n\n'
             'By Candice Yellowflower   \n')
         ok(markdown).diff('<h1>The Ant-Sugar Tales </h1>\n\n<p>By Candice Yellowflower   </p>\n')
 
@@ -211,18 +193,19 @@ class MarkdownParserTest(TestCase):
 
     def test_no_link_in_code_blocks(self):
         markdown = self.r('    This is a code block\n    This is a link [[1]] inside\n')
-        ok(markdown).diff('<pre><code>This is a code block\nThis is a link [[1]] inside\n</code></pre>\n')
+        ok(markdown).diff("<pre><code>This is a code block\n"
+                          "This is a link [[1]] inside\n</code></pre>\n")
 
     def test_whitespace_after_urls(self):
-        markdown = self.render_with('Japan: http://www.abc.net.au/news/events/japan-quake-2011/beforeafter.htm (yes, japan)',
-            extensions=EXT_AUTOLINK)
-        ok(markdown).diff('<p>Japan: <a href="http://www.abc.net.au/news/events/japan-quake-2011/beforeafter.htm">http://www.abc.net.au/news/events/japan-quake-2011/beforeafter.htm</a> (yes, japan)</p>\n')
+        markdown = self.render_with('Japan: http://www.abc.net.au/news/events/'
+                                    'japan-quake-2011/beforeafter.htm (yes, japan)',
+                                    extensions=EXT_AUTOLINK)
+        ok(markdown).diff('<p>Japan: <a href="http://www.abc.net.au/news/events/'
+                          'japan-quake-2011/beforeafter.htm">http://www.abc.net.'
+                          'au/news/events/japan-quake-2011/beforeafter.htm</a> (yes, japan)</p>\n')
 
     def test_infinite_loop_in_header(self):
-        markdown = self.render_with(
-            '######\n' \
-            '#Body#\n' \
-            '######\n')
+        markdown = self.render_with('######\n#Body#\n######\n')
         ok(markdown).diff('<h1>Body</h1>\n')
 
     def test_tables(self):
@@ -252,20 +235,18 @@ This is some awesome code
         ok(self.render_with(text)).not_contains('<code')
         ok(self.render_with(text, extensions=EXT_FENCED_CODE)).contains('<code')
 
-    def test_fenced_code_blocks_without_space(self):
-        text = 'foo\nbar\n```\nsome\ncode\n```\nbaz'
-
-        ok(self.render_with(text)).not_contains('<pre><code>')
-        ok(self.render_with(text, extensions=EXT_FENCED_CODE | EXT_LAX_SPACING)).contains('<pre><code>')
-
     def test_linkable_headers(self):
         markdown = self.r('### Hello [GitHub](http://github.com)')
         ok(markdown).diff('<h3>Hello <a href=\"http://github.com\">GitHub</a></h3>\n')
 
     def test_autolinking_with_ent_chars(self):
-        markdown = self.render_with('This a stupid link: https://github.com/rtomayko/tilt/issues?milestone=1&state=open',
-            extensions=EXT_AUTOLINK)
-        ok(markdown).diff('<p>This a stupid link: <a href=\"https://github.com/rtomayko/tilt/issues?milestone=1&amp;state=open\">https://github.com/rtomayko/tilt/issues?milestone=1&amp;state=open</a></p>\n')
+        markdown = self.render_with('This a stupid link: https://github.com/'
+                                    'rtomayko/tilt/issues?milestone=1&state=open',
+                                    extensions=EXT_AUTOLINK)
+        ok(markdown).diff('<p>This a stupid link: <a href=\"https://github.com/'
+                          'rtomayko/tilt/issues?milestone=1&amp;state=open\">'
+                          'https://github.com/rtomayko/tilt/issues?milestone=1'
+                          '&amp;state=open</a></p>\n')
 
     def test_spaced_headers(self):
         text = '#123 a header yes\n'
@@ -274,41 +255,58 @@ This is some awesome code
 
 class MarkdownBlockCustomRendererTest(TestCase):
     name = 'Markdown Block Custom Renderer'
+
     def setup(self):
         class MyBlockRenderer(HtmlRenderer):
             def block_code(self, text, lang):
                 return '<pre class="unique-%s">%s</pre>' % (lang, text)
+
             def block_quote(self, text):
                 return '<blockquote cite="my">\n%s</blockquote>' % (text)
+
             def block_html(self, text):
                 return 'This is html: %s' % (text)
+
             def header(self, text, level):
                 return '<h%d class="custom">%s</h%d>' % (level, text, level)
+
             def hrule(self):
                 return 'HR\n'
+
             def list(self, text, flags):
                 return 'LIST\n%s' % (text)
+
             def list_item(self, text, flags):
                 return '[LIST ITEM:%s]\n' % (text.strip())
+
             def footnotes(self, text):
                 return '[FOOT: %s]' % (text)
+
             def footnote_def(self, text, num):
                 return '[DEF: text=%s, num=%d' % (text, num)
 
         class MyTableRenderer(HtmlRenderer):
-            def table(self, header, body):
-                return '[TABLE header:%s body:%s]' % (header, body)
+            def table(self, content):
+                return '[TABLE content:%s]' % (content)
+
+            def table_header(self, header):
+                return '[HEADER: %s]\n' % (header)
+
+            def table_body(self, body):
+                return '[BODY: %s]' % (body)
+
             def table_row(self, text):
-                return '[TABLE ROW: %s]' % text
+                return '[ROW:%s]' % text
+
             def table_cell(self, text, flag):
-                return '<CELL>%s</CELL>\n' % text
+                return '<CELL>%s</CELL>' % text
 
         class MyParagraphRenderer(HtmlRenderer):
             def paragraph(self, text):
                 return 'PARAGRAPH:%s\n' % text
 
-        self.br = Markdown(MyBlockRenderer(), extensions=EXT_FENCED_CODE|EXT_FOOTNOTES)
-        self.tr = Markdown(MyTableRenderer(), extensions=EXT_FENCED_CODE|EXT_TABLES)
+        self.br = Markdown(MyBlockRenderer(), extensions=EXT_FENCED_CODE | EXT_FOOTNOTES)
+        self.tr = Markdown(MyTableRenderer(), extensions=EXT_FENCED_CODE | EXT_TABLES)
         self.pr = Markdown(MyParagraphRenderer(), extensions=EXT_FENCED_CODE)
 
     def test_fenced_code(self):
@@ -317,11 +315,11 @@ class MarkdownBlockCustomRendererTest(TestCase):
 
     def test_block_quotes(self):
         text = self.br.render(
-            'A wise man once said:\n\n' \
+            'A wise man once said:\n\n'
             ' > Isn\'t it wonderful just to be alive.\n')
-        ok(text).diff(
-            '<p>A wise man once said:</p>\n' \
-            '<blockquote cite="my">\n<p>Isn&#39;t it wonderful just to be alive.</p>\n</blockquote>')
+        ok(text).diff('<p>A wise man once said:</p>\n'
+                      '<blockquote cite="my">\n'
+                      '<p>Isn&#39;t it wonderful just to be alive.</p>\n</blockquote>')
 
     def test_raw_block(self):
         text = self.br.render('<p>raw</p>\n')
@@ -346,8 +344,8 @@ class MarkdownBlockCustomRendererTest(TestCase):
 
     def test_table(self):
         text = self.tr.render('name | age\n-----|----\nMike | 30')
-        ok(text).diff('[TABLE header:[TABLE ROW: <CELL>name</CELL>\n<CELL>age</CELL>\n]'
-                      ' body:[TABLE ROW: <CELL>Mike</CELL>\n<CELL>30</CELL>\n]]')
+        ok(text).diff('[TABLE content:[HEADER: [ROW:<CELL>name</CELL><CELL>age</CELL>]]\n'
+                      '[BODY: [ROW:<CELL>Mike</CELL><CELL>30</CELL>]]]')
 
     def test_paragraph(self):
         text = self.pr.render('one\n\ntwo')
@@ -356,43 +354,58 @@ class MarkdownBlockCustomRendererTest(TestCase):
 
 class MarkdownSpanCustomRendererTest(TestCase):
     name = 'Markdown Span Custom Renderer'
+
     def setup(self):
         class MySpanRenderer(HtmlRenderer):
             def autolink(self, link, type):
                 return '[AUTOLINK] link=%s, type=%d' % (link, type)
+
             def codespan(self, text):
                 return '[CODESPAN] %s' % text
+
             def double_emphasis(self, text):
                 return '[DOUBLE EMPHASIS] %s' % text
+
             def emphasis(self, text):
                 return '[EMPHASIS] %s' % text
+
             def underline(self, text):
                 return '[UNDERLINE] %s' % text
+
             def highlight(self, text):
                 return '[HIGHLIGHT] %s' % text
+
             def quote(self, text):
                 return '[QUOTE] %s' % text
+
             def image(self, link, title, alt):
                 return '[IMG] link=%s, title=%s, alt=%s' % (link, title, alt)
+
             def linebreak(self):
                 return '[LB]'
-            def link(self, link, title, content):
+
+            def link(self, content, link, title):
                 return 'link=%s, title=%s, cont=%s' % (link, title, content)
+
             def raw_html(self, text):
                 return '[RAWHTML]%s' % text
+
             def triple_emphasis(self, text):
                 return '[STRONG] %s' % text
+
             def strikethrough(self, text):
                 return '[DEL] %s' % text
+
             def superscript(self, text):
                 return '[SUP] %s' % text
+
             def footnote_ref(self, num):
                 return '[FOOTNOTE_REF] num=%d' % num
 
         self.sr = Markdown(MySpanRenderer(),
-                           extensions=EXT_AUTOLINK|EXT_UNDERLINE|EXT_HIGHLIGHT|
-                                      EXT_QUOTE|EXT_STRIKETHROUGH|EXT_SUPERSCRIPT|
-                                      EXT_FOOTNOTES)
+                           extensions=EXT_AUTOLINK | EXT_UNDERLINE |
+                           EXT_HIGHLIGHT | EXT_QUOTE | EXT_STRIKETHROUGH |
+                           EXT_SUPERSCRIPT | EXT_FOOTNOTES)
 
     def test_autolink(self):
         text = self.sr.render('<https://github.com/>')
