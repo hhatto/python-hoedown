@@ -144,7 +144,7 @@ cdef class BaseRenderer:
             # ``wrapper.method_names[i]`` is converted to a normal string first.
             method_name = wrapper.method_names[i].decode('utf-8')
             if hasattr(self, method_name):
-                dest[i] = source[i]
+                dest[i+1] = source[i+1]
 
     def setup(self):
         """A method that can be overridden by the renderer that sublasses ``BaseRenderer``.
