@@ -408,7 +408,7 @@ const char *method_names[] = {
     "superscript",
     "footnote_ref",
     "math",
-    "raw_html_tag",
+    "raw_html",
 
     /* low level */
     "entity",

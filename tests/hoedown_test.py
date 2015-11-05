@@ -286,14 +286,20 @@ class MarkdownBlockCustomRendererTest(TestCase):
                 return '[DEF: text=%s, num=%d' % (text, num)
 
         class MyTableRenderer(HtmlRenderer):
-            def table(self, header, body):
-                return '[TABLE header:%s body:%s]' % (header, body)
+            def table(self, content):
+                return '[TABLE content:%s]' % (content)
+
+            def table_header(self, header):
+                return '[HEADER: %s]\n' % (header)
+
+            def table_body(self, body):
+                return '[BODY: %s]' % (body)
 
             def table_row(self, text):
-                return '[TABLE ROW: %s]' % text
+                return '[ROW:%s]' % text
 
             def table_cell(self, text, flag):
-                return '<CELL>%s</CELL>\n' % text
+                return '<CELL>%s</CELL>' % text
 
         class MyParagraphRenderer(HtmlRenderer):
             def paragraph(self, text):
@@ -338,8 +344,8 @@ class MarkdownBlockCustomRendererTest(TestCase):
 
     def test_table(self):
         text = self.tr.render('name | age\n-----|----\nMike | 30')
-        ok(text).diff('[TABLE header:[TABLE ROW: <CELL>name</CELL>\n<CELL>age</CELL>\n]'
-                      ' body:[TABLE ROW: <CELL>Mike</CELL>\n<CELL>30</CELL>\n]]')
+        ok(text).diff('[TABLE content:[HEADER: [ROW:<CELL>name</CELL><CELL>age</CELL>]]\n'
+                      '[BODY: [ROW:<CELL>Mike</CELL><CELL>30</CELL>]]]')
 
     def test_paragraph(self):
         text = self.pr.render('one\n\ntwo')
@@ -378,7 +384,7 @@ class MarkdownSpanCustomRendererTest(TestCase):
             def linebreak(self):
                 return '[LB]'
 
-            def link(self, link, title, content):
+            def link(self, content, link, title):
                 return 'link=%s, title=%s, cont=%s' % (link, title, content)
 
             def raw_html(self, text):
