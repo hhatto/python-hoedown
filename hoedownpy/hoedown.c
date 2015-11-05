@@ -709,14 +709,6 @@ static CYTHON_INLINE PyObject* __Pyx_PyInt_From_unsigned_int(unsigned int value)
 
 static CYTHON_INLINE PyObject* __Pyx_PyInt_From_int(int value);
 
-static int __Pyx_Print(PyObject*, PyObject *, int);
-#if CYTHON_COMPILING_IN_PYPY || PY_MAJOR_VERSION >= 3
-static PyObject* __pyx_print = 0;
-static PyObject* __pyx_print_kwargs = 0;
-#endif
-
-static int __Pyx_PrintOne(PyObject* stream, PyObject *o);
-
 static CYTHON_INLINE PyObject* __Pyx_PyInt_From_long(long value);
 
 static CYTHON_INLINE long __Pyx_PyInt_As_long(PyObject *);
@@ -743,8 +735,6 @@ int __pyx_module_is_main_hoedown = 0;
 
 /* Implementation of 'hoedown' */
 static PyObject *__pyx_builtin_ValueError;
-static char __pyx_k_end[] = "end";
-static char __pyx_k_file[] = "file";
 static char __pyx_k_html[] = "html";
 static char __pyx_k_main[] = "__main__";
 static char __pyx_k_name[] = "__name__";
@@ -753,7 +743,6 @@ static char __pyx_k_text[] = "text";
 static char __pyx_k_UTF_8[] = "UTF-8";
 static char __pyx_k_class[] = "__class__";
 static char __pyx_k_flags[] = "flags";
-static char __pyx_k_print[] = "print";
 static char __pyx_k_setup[] = "setup";
 static char __pyx_k_encode[] = "encode";
 static char __pyx_k_render[] = "render";
@@ -764,15 +753,11 @@ static char __pyx_k_EXT_MATH[] = "EXT_MATH";
 static char __pyx_k_markdown[] = "markdown";
 static char __pyx_k_renderer[] = "renderer";
 static char __pyx_k_EXT_QUOTE[] = "EXT_QUOTE";
-static char __pyx_k_parse_end[] = "parse end";
 static char __pyx_k_EXT_TABLES[] = "EXT_TABLES";
 static char __pyx_k_ValueError[] = "ValueError";
 static char __pyx_k_extensions[] = "extensions";
-static char __pyx_k_prepro_end[] = "prepro end";
 static char __pyx_k_preprocess[] = "preprocess";
 static char __pyx_k_HTML_ESCAPE[] = "HTML_ESCAPE";
-static char __pyx_k_parse_start[] = "parse start";
-static char __pyx_k_postpro_end[] = "postpro end";
 static char __pyx_k_postprocess[] = "postprocess";
 static char __pyx_k_EXT_AUTOLINK[] = "EXT_AUTOLINK";
 static char __pyx_k_TABLE_HEADER[] = "TABLE_HEADER";
@@ -784,11 +769,9 @@ static char __pyx_k_HTML_TOC_TREE[] = "HTML_TOC_TREE";
 static char __pyx_k_TABLE_ALIGN_C[] = "TABLE_ALIGN_C";
 static char __pyx_k_TABLE_ALIGN_L[] = "TABLE_ALIGN_L";
 static char __pyx_k_TABLE_ALIGN_R[] = "TABLE_ALIGN_R";
-static char __pyx_k_postpro_start[] = "postpro start";
 static char __pyx_k_HTML_HARD_WRAP[] = "HTML_HARD_WRAP";
 static char __pyx_k_HTML_SKIP_HTML[] = "HTML_SKIP_HTML";
 static char __pyx_k_HTML_USE_XHTML[] = "HTML_USE_XHTML";
-static char __pyx_k_convert_string[] = "convert string";
 static char __pyx_k_EXT_FENCED_CODE[] = "EXT_FENCED_CODE";
 static char __pyx_k_EXT_SUPERSCRIPT[] = "EXT_SUPERSCRIPT";
 static char __pyx_k_TABLE_ALIGNMASK[] = "TABLE_ALIGNMASK";
@@ -829,26 +812,17 @@ static PyObject *__pyx_kp_s_UTF_8;
 static PyObject *__pyx_kp_s_Users_hattori_work_python_hoedo;
 static PyObject *__pyx_n_s_ValueError;
 static PyObject *__pyx_n_s_class;
-static PyObject *__pyx_kp_s_convert_string;
 static PyObject *__pyx_n_s_encode;
-static PyObject *__pyx_n_s_end;
 static PyObject *__pyx_kp_s_expected_instance_of_BaseRendere;
 static PyObject *__pyx_n_s_extensions;
-static PyObject *__pyx_n_s_file;
 static PyObject *__pyx_n_s_flags;
 static PyObject *__pyx_n_s_hoedown;
 static PyObject *__pyx_n_s_html;
 static PyObject *__pyx_n_s_main;
 static PyObject *__pyx_n_s_markdown;
 static PyObject *__pyx_n_s_name;
-static PyObject *__pyx_kp_s_parse_end;
-static PyObject *__pyx_kp_s_parse_start;
-static PyObject *__pyx_kp_s_postpro_end;
-static PyObject *__pyx_kp_s_postpro_start;
 static PyObject *__pyx_n_s_postprocess;
-static PyObject *__pyx_kp_s_prepro_end;
 static PyObject *__pyx_n_s_preprocess;
-static PyObject *__pyx_n_s_print;
 static PyObject *__pyx_n_s_render;
 static PyObject *__pyx_n_s_render_flags;
 static PyObject *__pyx_n_s_renderer;
@@ -2205,7 +2179,7 @@ static PyObject *__pyx_pf_7hoedown_8Markdown_2render(struct __pyx_obj_7hoedown_M
  *         if hasattr(self.renderer, 'preprocess'):
  *             text = self.renderer.preprocess(text)             # <<<<<<<<<<<<<<
  * 
- *         print("prepro end")
+ *         # Convert string
  */
     __pyx_t_4 = __Pyx_PyObject_GetAttrStr(((PyObject *)__pyx_v_self->renderer), __pyx_n_s_preprocess); if (unlikely(!__pyx_t_4)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 210; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
     __Pyx_GOTREF(__pyx_t_4);
@@ -2246,43 +2220,34 @@ static PyObject *__pyx_pf_7hoedown_8Markdown_2render(struct __pyx_obj_7hoedown_M
  */
   }
 
-  /* "hoedown.pyx":212
- *             text = self.renderer.preprocess(text)
- * 
- *         print("prepro end")             # <<<<<<<<<<<<<<
- * 
- *         # Convert string
- */
-  if (__Pyx_PrintOne(0, __pyx_kp_s_prepro_end) < 0) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 212; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
-
-  /* "hoedown.pyx":216
+  /* "hoedown.pyx":214
  *         # Convert string
  *         cdef bytes py_string
  *         if hasattr(text, 'encode'):             # <<<<<<<<<<<<<<
  *             py_string = text.encode('UTF-8', 'strict')
  *         else:
  */
-  __pyx_t_3 = PyObject_HasAttr(__pyx_v_text, __pyx_n_s_encode); if (unlikely(__pyx_t_3 == -1)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 216; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+  __pyx_t_3 = PyObject_HasAttr(__pyx_v_text, __pyx_n_s_encode); if (unlikely(__pyx_t_3 == -1)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 214; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
   __pyx_t_2 = (__pyx_t_3 != 0);
   if (__pyx_t_2) {
 
-    /* "hoedown.pyx":217
+    /* "hoedown.pyx":215
  *         cdef bytes py_string
  *         if hasattr(text, 'encode'):
  *             py_string = text.encode('UTF-8', 'strict')             # <<<<<<<<<<<<<<
  *         else:
  *             py_string = text  # If it's a byte string it's assumed it's UTF-8
  */
-    __pyx_t_1 = __Pyx_PyObject_GetAttrStr(__pyx_v_text, __pyx_n_s_encode); if (unlikely(!__pyx_t_1)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 217; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+    __pyx_t_1 = __Pyx_PyObject_GetAttrStr(__pyx_v_text, __pyx_n_s_encode); if (unlikely(!__pyx_t_1)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 215; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
     __Pyx_GOTREF(__pyx_t_1);
-    __pyx_t_4 = __Pyx_PyObject_Call(__pyx_t_1, __pyx_tuple__3, NULL); if (unlikely(!__pyx_t_4)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 217; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+    __pyx_t_4 = __Pyx_PyObject_Call(__pyx_t_1, __pyx_tuple__3, NULL); if (unlikely(!__pyx_t_4)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 215; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
     __Pyx_GOTREF(__pyx_t_4);
     __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
-    if (!(likely(PyBytes_CheckExact(__pyx_t_4))||((__pyx_t_4) == Py_None)||(PyErr_Format(PyExc_TypeError, "Expected %.16s, got %.200s", "bytes", Py_TYPE(__pyx_t_4)->tp_name), 0))) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 217; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+    if (!(likely(PyBytes_CheckExact(__pyx_t_4))||((__pyx_t_4) == Py_None)||(PyErr_Format(PyExc_TypeError, "Expected %.16s, got %.200s", "bytes", Py_TYPE(__pyx_t_4)->tp_name), 0))) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 215; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
     __pyx_v_py_string = ((PyObject*)__pyx_t_4);
     __pyx_t_4 = 0;
 
-    /* "hoedown.pyx":216
+    /* "hoedown.pyx":214
  *         # Convert string
  *         cdef bytes py_string
  *         if hasattr(text, 'encode'):             # <<<<<<<<<<<<<<
@@ -2292,7 +2257,7 @@ static PyObject *__pyx_pf_7hoedown_8Markdown_2render(struct __pyx_obj_7hoedown_M
     goto __pyx_L4;
   }
 
-  /* "hoedown.pyx":219
+  /* "hoedown.pyx":217
  *             py_string = text.encode('UTF-8', 'strict')
  *         else:
  *             py_string = text  # If it's a byte string it's assumed it's UTF-8             # <<<<<<<<<<<<<<
@@ -2300,7 +2265,7 @@ static PyObject *__pyx_pf_7hoedown_8Markdown_2render(struct __pyx_obj_7hoedown_M
  * 
  */
   /*else*/ {
-    if (!(likely(PyBytes_CheckExact(__pyx_v_text))||((__pyx_v_text) == Py_None)||(PyErr_Format(PyExc_TypeError, "Expected %.16s, got %.200s", "bytes", Py_TYPE(__pyx_v_text)->tp_name), 0))) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 219; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+    if (!(likely(PyBytes_CheckExact(__pyx_v_text))||((__pyx_v_text) == Py_None)||(PyErr_Format(PyExc_TypeError, "Expected %.16s, got %.200s", "bytes", Py_TYPE(__pyx_v_text)->tp_name), 0))) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 217; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
     __pyx_t_4 = __pyx_v_text;
     __Pyx_INCREF(__pyx_t_4);
     __pyx_v_py_string = ((PyObject*)__pyx_t_4);
@@ -2308,26 +2273,17 @@ static PyObject *__pyx_pf_7hoedown_8Markdown_2render(struct __pyx_obj_7hoedown_M
   }
   __pyx_L4:;
 
-  /* "hoedown.pyx":220
+  /* "hoedown.pyx":218
  *         else:
  *             py_string = text  # If it's a byte string it's assumed it's UTF-8
  *         cdef char *c_string = py_string             # <<<<<<<<<<<<<<
  * 
- *         print("convert string")
- */
-  __pyx_t_7 = __Pyx_PyObject_AsString(__pyx_v_py_string); if (unlikely((!__pyx_t_7) && PyErr_Occurred())) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 220; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
-  __pyx_v_c_string = __pyx_t_7;
-
-  /* "hoedown.pyx":222
- *         cdef char *c_string = py_string
- * 
- *         print("convert string")             # <<<<<<<<<<<<<<
- * 
  *         # Buffers
  */
-  if (__Pyx_PrintOne(0, __pyx_kp_s_convert_string) < 0) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 222; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+  __pyx_t_7 = __Pyx_PyObject_AsString(__pyx_v_py_string); if (unlikely((!__pyx_t_7) && PyErr_Occurred())) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 218; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+  __pyx_v_c_string = __pyx_t_7;
 
-  /* "hoedown.pyx":225
+  /* "hoedown.pyx":221
  * 
  *         # Buffers
  *         cdef _hoedown.hoedown_buffer *ib = _hoedown.hoedown_buffer_new(1024)             # <<<<<<<<<<<<<<
@@ -2336,7 +2292,7 @@ static PyObject *__pyx_pf_7hoedown_8Markdown_2render(struct __pyx_obj_7hoedown_M
  */
   __pyx_v_ib = hoedown_buffer_new(0x400);
 
-  /* "hoedown.pyx":226
+  /* "hoedown.pyx":222
  *         # Buffers
  *         cdef _hoedown.hoedown_buffer *ib = _hoedown.hoedown_buffer_new(1024)
  *         _hoedown.hoedown_buffer_puts(ib, c_string)             # <<<<<<<<<<<<<<
@@ -2345,7 +2301,7 @@ static PyObject *__pyx_pf_7hoedown_8Markdown_2render(struct __pyx_obj_7hoedown_M
  */
   hoedown_buffer_puts(__pyx_v_ib, __pyx_v_c_string);
 
-  /* "hoedown.pyx":228
+  /* "hoedown.pyx":224
  *         _hoedown.hoedown_buffer_puts(ib, c_string)
  * 
  *         cdef _hoedown.hoedown_buffer *ob = _hoedown.hoedown_buffer_new(128)             # <<<<<<<<<<<<<<
@@ -2354,65 +2310,38 @@ static PyObject *__pyx_pf_7hoedown_8Markdown_2render(struct __pyx_obj_7hoedown_M
  */
   __pyx_v_ob = hoedown_buffer_new(0x80);
 
-  /* "hoedown.pyx":229
+  /* "hoedown.pyx":225
  * 
  *         cdef _hoedown.hoedown_buffer *ob = _hoedown.hoedown_buffer_new(128)
  *         _hoedown.hoedown_buffer_grow(ob, <size_t> (ib.size * 1.4))             # <<<<<<<<<<<<<<
  * 
- *         print("parse start")
+ *         # Parse! And make a unicode string
  */
   hoedown_buffer_grow(__pyx_v_ob, ((size_t)(__pyx_v_ib->size * 1.4)));
 
-  /* "hoedown.pyx":231
- *         _hoedown.hoedown_buffer_grow(ob, <size_t> (ib.size * 1.4))
- * 
- *         print("parse start")             # <<<<<<<<<<<<<<
- * 
- *         # Parse! And make a unicode string
- */
-  if (__Pyx_PrintOne(0, __pyx_kp_s_parse_start) < 0) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 231; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
-
-  /* "hoedown.pyx":234
+  /* "hoedown.pyx":228
  * 
  *         # Parse! And make a unicode string
  *         _hoedown.hoedown_document_render(self.document, ob, ib.data, ib.size)             # <<<<<<<<<<<<<<
- *         print("parse end")
+ *         text = (<char *> ob.data)[:ob.size].decode('UTF-8', 'strict')
  * 
  */
   hoedown_document_render(__pyx_v_self->document, __pyx_v_ob, __pyx_v_ib->data, __pyx_v_ib->size);
 
-  /* "hoedown.pyx":235
+  /* "hoedown.pyx":229
  *         # Parse! And make a unicode string
  *         _hoedown.hoedown_document_render(self.document, ob, ib.data, ib.size)
- *         print("parse end")             # <<<<<<<<<<<<<<
- * 
- *         text = (<char *> ob.data)[:ob.size].decode('UTF-8', 'strict')
- */
-  if (__Pyx_PrintOne(0, __pyx_kp_s_parse_end) < 0) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 235; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
-
-  /* "hoedown.pyx":237
- *         print("parse end")
- * 
  *         text = (<char *> ob.data)[:ob.size].decode('UTF-8', 'strict')             # <<<<<<<<<<<<<<
  * 
- *         print("postpro start")
+ *         if hasattr(self.renderer, 'postprocess'):
  */
-  __pyx_t_4 = __Pyx_decode_c_string(((char *)__pyx_v_ob->data), 0, __pyx_v_ob->size, NULL, NULL, PyUnicode_DecodeUTF8); if (unlikely(!__pyx_t_4)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 237; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+  __pyx_t_4 = __Pyx_decode_c_string(((char *)__pyx_v_ob->data), 0, __pyx_v_ob->size, NULL, NULL, PyUnicode_DecodeUTF8); if (unlikely(!__pyx_t_4)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 229; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
   __Pyx_GOTREF(__pyx_t_4);
   __Pyx_DECREF_SET(__pyx_v_text, __pyx_t_4);
   __pyx_t_4 = 0;
 
-  /* "hoedown.pyx":239
+  /* "hoedown.pyx":231
  *         text = (<char *> ob.data)[:ob.size].decode('UTF-8', 'strict')
- * 
- *         print("postpro start")             # <<<<<<<<<<<<<<
- * 
- *         if hasattr(self.renderer, 'postprocess'):
- */
-  if (__Pyx_PrintOne(0, __pyx_kp_s_postpro_start) < 0) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 239; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
-
-  /* "hoedown.pyx":241
- *         print("postpro start")
  * 
  *         if hasattr(self.renderer, 'postprocess'):             # <<<<<<<<<<<<<<
  *             text = self.renderer.postprocess(text)
@@ -2420,19 +2349,19 @@ static PyObject *__pyx_pf_7hoedown_8Markdown_2render(struct __pyx_obj_7hoedown_M
  */
   __pyx_t_4 = ((PyObject *)__pyx_v_self->renderer);
   __Pyx_INCREF(__pyx_t_4);
-  __pyx_t_2 = PyObject_HasAttr(__pyx_t_4, __pyx_n_s_postprocess); if (unlikely(__pyx_t_2 == -1)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 241; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+  __pyx_t_2 = PyObject_HasAttr(__pyx_t_4, __pyx_n_s_postprocess); if (unlikely(__pyx_t_2 == -1)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 231; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
   __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
   __pyx_t_3 = (__pyx_t_2 != 0);
   if (__pyx_t_3) {
 
-    /* "hoedown.pyx":242
+    /* "hoedown.pyx":232
  * 
  *         if hasattr(self.renderer, 'postprocess'):
  *             text = self.renderer.postprocess(text)             # <<<<<<<<<<<<<<
  * 
- *         print("postpro end")
+ *         # Return a string and release buffers
  */
-    __pyx_t_1 = __Pyx_PyObject_GetAttrStr(((PyObject *)__pyx_v_self->renderer), __pyx_n_s_postprocess); if (unlikely(!__pyx_t_1)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 242; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+    __pyx_t_1 = __Pyx_PyObject_GetAttrStr(((PyObject *)__pyx_v_self->renderer), __pyx_n_s_postprocess); if (unlikely(!__pyx_t_1)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 232; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
     __Pyx_GOTREF(__pyx_t_1);
     __pyx_t_6 = NULL;
     if (CYTHON_COMPILING_IN_CPYTHON && likely(PyMethod_Check(__pyx_t_1))) {
@@ -2445,16 +2374,16 @@ static PyObject *__pyx_pf_7hoedown_8Markdown_2render(struct __pyx_obj_7hoedown_M
       }
     }
     if (!__pyx_t_6) {
-      __pyx_t_4 = __Pyx_PyObject_CallOneArg(__pyx_t_1, __pyx_v_text); if (unlikely(!__pyx_t_4)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 242; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+      __pyx_t_4 = __Pyx_PyObject_CallOneArg(__pyx_t_1, __pyx_v_text); if (unlikely(!__pyx_t_4)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 232; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
       __Pyx_GOTREF(__pyx_t_4);
     } else {
-      __pyx_t_5 = PyTuple_New(1+1); if (unlikely(!__pyx_t_5)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 242; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+      __pyx_t_5 = PyTuple_New(1+1); if (unlikely(!__pyx_t_5)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 232; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
       __Pyx_GOTREF(__pyx_t_5);
       __Pyx_GIVEREF(__pyx_t_6); PyTuple_SET_ITEM(__pyx_t_5, 0, __pyx_t_6); __pyx_t_6 = NULL;
       __Pyx_INCREF(__pyx_v_text);
       __Pyx_GIVEREF(__pyx_v_text);
       PyTuple_SET_ITEM(__pyx_t_5, 0+1, __pyx_v_text);
-      __pyx_t_4 = __Pyx_PyObject_Call(__pyx_t_1, __pyx_t_5, NULL); if (unlikely(!__pyx_t_4)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 242; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+      __pyx_t_4 = __Pyx_PyObject_Call(__pyx_t_1, __pyx_t_5, NULL); if (unlikely(!__pyx_t_4)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 232; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
       __Pyx_GOTREF(__pyx_t_4);
       __Pyx_DECREF(__pyx_t_5); __pyx_t_5 = 0;
     }
@@ -2462,8 +2391,8 @@ static PyObject *__pyx_pf_7hoedown_8Markdown_2render(struct __pyx_obj_7hoedown_M
     __Pyx_DECREF_SET(__pyx_v_text, __pyx_t_4);
     __pyx_t_4 = 0;
 
-    /* "hoedown.pyx":241
- *         print("postpro start")
+    /* "hoedown.pyx":231
+ *         text = (<char *> ob.data)[:ob.size].decode('UTF-8', 'strict')
  * 
  *         if hasattr(self.renderer, 'postprocess'):             # <<<<<<<<<<<<<<
  *             text = self.renderer.postprocess(text)
@@ -2471,16 +2400,7 @@ static PyObject *__pyx_pf_7hoedown_8Markdown_2render(struct __pyx_obj_7hoedown_M
  */
   }
 
-  /* "hoedown.pyx":244
- *             text = self.renderer.postprocess(text)
- * 
- *         print("postpro end")             # <<<<<<<<<<<<<<
- * 
- *         # Return a string and release buffers
- */
-  if (__Pyx_PrintOne(0, __pyx_kp_s_postpro_end) < 0) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 244; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
-
-  /* "hoedown.pyx":247
+  /* "hoedown.pyx":235
  * 
  *         # Return a string and release buffers
  *         try:             # <<<<<<<<<<<<<<
@@ -2489,7 +2409,7 @@ static PyObject *__pyx_pf_7hoedown_8Markdown_2render(struct __pyx_obj_7hoedown_M
  */
   /*try:*/ {
 
-    /* "hoedown.pyx":248
+    /* "hoedown.pyx":236
  *         # Return a string and release buffers
  *         try:
  *             return text             # <<<<<<<<<<<<<<
@@ -2502,7 +2422,7 @@ static PyObject *__pyx_pf_7hoedown_8Markdown_2render(struct __pyx_obj_7hoedown_M
     goto __pyx_L6_return;
   }
 
-  /* "hoedown.pyx":250
+  /* "hoedown.pyx":238
  *             return text
  *         finally:
  *             _hoedown.hoedown_buffer_free(ob)             # <<<<<<<<<<<<<<
@@ -2515,7 +2435,7 @@ static PyObject *__pyx_pf_7hoedown_8Markdown_2render(struct __pyx_obj_7hoedown_M
       __pyx_r = 0;
       hoedown_buffer_free(__pyx_v_ob);
 
-      /* "hoedown.pyx":251
+      /* "hoedown.pyx":239
  *         finally:
  *             _hoedown.hoedown_buffer_free(ob)
  *             _hoedown.hoedown_buffer_free(ib)             # <<<<<<<<<<<<<<
@@ -2553,7 +2473,7 @@ static PyObject *__pyx_pf_7hoedown_8Markdown_2render(struct __pyx_obj_7hoedown_M
   return __pyx_r;
 }
 
-/* "hoedown.pyx":253
+/* "hoedown.pyx":241
  *             _hoedown.hoedown_buffer_free(ib)
  * 
  *     def __dealloc__(self):             # <<<<<<<<<<<<<<
@@ -2577,7 +2497,7 @@ static void __pyx_pf_7hoedown_8Markdown_4__dealloc__(struct __pyx_obj_7hoedown_M
   int __pyx_t_1;
   __Pyx_RefNannySetupContext("__dealloc__", 0);
 
-  /* "hoedown.pyx":254
+  /* "hoedown.pyx":242
  * 
  *     def __dealloc__(self):
  *         if self.document is not NULL:             # <<<<<<<<<<<<<<
@@ -2586,14 +2506,14 @@ static void __pyx_pf_7hoedown_8Markdown_4__dealloc__(struct __pyx_obj_7hoedown_M
   __pyx_t_1 = ((__pyx_v_self->document != NULL) != 0);
   if (__pyx_t_1) {
 
-    /* "hoedown.pyx":255
+    /* "hoedown.pyx":243
  *     def __dealloc__(self):
  *         if self.document is not NULL:
  *             _hoedown.hoedown_document_free(self.document)             # <<<<<<<<<<<<<<
  */
     hoedown_document_free(__pyx_v_self->document);
 
-    /* "hoedown.pyx":254
+    /* "hoedown.pyx":242
  * 
  *     def __dealloc__(self):
  *         if self.document is not NULL:             # <<<<<<<<<<<<<<
@@ -2601,7 +2521,7 @@ static void __pyx_pf_7hoedown_8Markdown_4__dealloc__(struct __pyx_obj_7hoedown_M
  */
   }
 
-  /* "hoedown.pyx":253
+  /* "hoedown.pyx":241
  *             _hoedown.hoedown_buffer_free(ib)
  * 
  *     def __dealloc__(self):             # <<<<<<<<<<<<<<
@@ -3112,26 +3032,17 @@ static __Pyx_StringTabEntry __pyx_string_tab[] = {
   {&__pyx_kp_s_Users_hattori_work_python_hoedo, __pyx_k_Users_hattori_work_python_hoedo, sizeof(__pyx_k_Users_hattori_work_python_hoedo), 0, 0, 1, 0},
   {&__pyx_n_s_ValueError, __pyx_k_ValueError, sizeof(__pyx_k_ValueError), 0, 0, 1, 1},
   {&__pyx_n_s_class, __pyx_k_class, sizeof(__pyx_k_class), 0, 0, 1, 1},
-  {&__pyx_kp_s_convert_string, __pyx_k_convert_string, sizeof(__pyx_k_convert_string), 0, 0, 1, 0},
   {&__pyx_n_s_encode, __pyx_k_encode, sizeof(__pyx_k_encode), 0, 0, 1, 1},
-  {&__pyx_n_s_end, __pyx_k_end, sizeof(__pyx_k_end), 0, 0, 1, 1},
   {&__pyx_kp_s_expected_instance_of_BaseRendere, __pyx_k_expected_instance_of_BaseRendere, sizeof(__pyx_k_expected_instance_of_BaseRendere), 0, 0, 1, 0},
   {&__pyx_n_s_extensions, __pyx_k_extensions, sizeof(__pyx_k_extensions), 0, 0, 1, 1},
-  {&__pyx_n_s_file, __pyx_k_file, sizeof(__pyx_k_file), 0, 0, 1, 1},
   {&__pyx_n_s_flags, __pyx_k_flags, sizeof(__pyx_k_flags), 0, 0, 1, 1},
   {&__pyx_n_s_hoedown, __pyx_k_hoedown, sizeof(__pyx_k_hoedown), 0, 0, 1, 1},
   {&__pyx_n_s_html, __pyx_k_html, sizeof(__pyx_k_html), 0, 0, 1, 1},
   {&__pyx_n_s_main, __pyx_k_main, sizeof(__pyx_k_main), 0, 0, 1, 1},
   {&__pyx_n_s_markdown, __pyx_k_markdown, sizeof(__pyx_k_markdown), 0, 0, 1, 1},
   {&__pyx_n_s_name, __pyx_k_name, sizeof(__pyx_k_name), 0, 0, 1, 1},
-  {&__pyx_kp_s_parse_end, __pyx_k_parse_end, sizeof(__pyx_k_parse_end), 0, 0, 1, 0},
-  {&__pyx_kp_s_parse_start, __pyx_k_parse_start, sizeof(__pyx_k_parse_start), 0, 0, 1, 0},
-  {&__pyx_kp_s_postpro_end, __pyx_k_postpro_end, sizeof(__pyx_k_postpro_end), 0, 0, 1, 0},
-  {&__pyx_kp_s_postpro_start, __pyx_k_postpro_start, sizeof(__pyx_k_postpro_start), 0, 0, 1, 0},
   {&__pyx_n_s_postprocess, __pyx_k_postprocess, sizeof(__pyx_k_postprocess), 0, 0, 1, 1},
-  {&__pyx_kp_s_prepro_end, __pyx_k_prepro_end, sizeof(__pyx_k_prepro_end), 0, 0, 1, 0},
   {&__pyx_n_s_preprocess, __pyx_k_preprocess, sizeof(__pyx_k_preprocess), 0, 0, 1, 1},
-  {&__pyx_n_s_print, __pyx_k_print, sizeof(__pyx_k_print), 0, 0, 1, 1},
   {&__pyx_n_s_render, __pyx_k_render, sizeof(__pyx_k_render), 0, 0, 1, 1},
   {&__pyx_n_s_render_flags, __pyx_k_render_flags, sizeof(__pyx_k_render_flags), 0, 0, 1, 1},
   {&__pyx_n_s_renderer, __pyx_k_renderer, sizeof(__pyx_k_renderer), 0, 0, 1, 1},
@@ -3164,14 +3075,14 @@ static int __Pyx_InitCachedConstants(void) {
   __Pyx_GOTREF(__pyx_tuple_);
   __Pyx_GIVEREF(__pyx_tuple_);
 
-  /* "hoedown.pyx":217
+  /* "hoedown.pyx":215
  *         cdef bytes py_string
  *         if hasattr(text, 'encode'):
  *             py_string = text.encode('UTF-8', 'strict')             # <<<<<<<<<<<<<<
  *         else:
  *             py_string = text  # If it's a byte string it's assumed it's UTF-8
  */
-  __pyx_tuple__3 = PyTuple_Pack(2, __pyx_kp_s_UTF_8, __pyx_n_s_strict); if (unlikely(!__pyx_tuple__3)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 217; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+  __pyx_tuple__3 = PyTuple_Pack(2, __pyx_kp_s_UTF_8, __pyx_n_s_strict); if (unlikely(!__pyx_tuple__3)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 215; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
   __Pyx_GOTREF(__pyx_tuple__3);
   __Pyx_GIVEREF(__pyx_tuple__3);
 
@@ -5012,147 +4923,6 @@ static CYTHON_INLINE PyObject* __Pyx_PyInt_From_int(int value) {
                                      little, !is_unsigned);
     }
 }
-
-#if !CYTHON_COMPILING_IN_PYPY && PY_MAJOR_VERSION < 3
-static PyObject *__Pyx_GetStdout(void) {
-    PyObject *f = PySys_GetObject((char *)"stdout");
-    if (!f) {
-        PyErr_SetString(PyExc_RuntimeError, "lost sys.stdout");
-    }
-    return f;
-}
-static int __Pyx_Print(PyObject* f, PyObject *arg_tuple, int newline) {
-    int i;
-    if (!f) {
-        if (!(f = __Pyx_GetStdout()))
-            return -1;
-    }
-    Py_INCREF(f);
-    for (i=0; i < PyTuple_GET_SIZE(arg_tuple); i++) {
-        PyObject* v;
-        if (PyFile_SoftSpace(f, 1)) {
-            if (PyFile_WriteString(" ", f) < 0)
-                goto error;
-        }
-        v = PyTuple_GET_ITEM(arg_tuple, i);
-        if (PyFile_WriteObject(v, f, Py_PRINT_RAW) < 0)
-            goto error;
-        if (PyString_Check(v)) {
-            char *s = PyString_AsString(v);
-            Py_ssize_t len = PyString_Size(v);
-            if (len > 0) {
-                switch (s[len-1]) {
-                    case ' ': break;
-                    case '\f': case '\r': case '\n': case '\t': case '\v':
-                        PyFile_SoftSpace(f, 0);
-                        break;
-                    default:  break;
-                }
-            }
-        }
-    }
-    if (newline) {
-        if (PyFile_WriteString("\n", f) < 0)
-            goto error;
-        PyFile_SoftSpace(f, 0);
-    }
-    Py_DECREF(f);
-    return 0;
-error:
-    Py_DECREF(f);
-    return -1;
-}
-#else
-static int __Pyx_Print(PyObject* stream, PyObject *arg_tuple, int newline) {
-    PyObject* kwargs = 0;
-    PyObject* result = 0;
-    PyObject* end_string;
-    if (unlikely(!__pyx_print)) {
-        __pyx_print = PyObject_GetAttr(__pyx_b, __pyx_n_s_print);
-        if (!__pyx_print)
-            return -1;
-    }
-    if (stream) {
-        kwargs = PyDict_New();
-        if (unlikely(!kwargs))
-            return -1;
-        if (unlikely(PyDict_SetItem(kwargs, __pyx_n_s_file, stream) < 0))
-            goto bad;
-        if (!newline) {
-            end_string = PyUnicode_FromStringAndSize(" ", 1);
-            if (unlikely(!end_string))
-                goto bad;
-            if (PyDict_SetItem(kwargs, __pyx_n_s_end, end_string) < 0) {
-                Py_DECREF(end_string);
-                goto bad;
-            }
-            Py_DECREF(end_string);
-        }
-    } else if (!newline) {
-        if (unlikely(!__pyx_print_kwargs)) {
-            __pyx_print_kwargs = PyDict_New();
-            if (unlikely(!__pyx_print_kwargs))
-                return -1;
-            end_string = PyUnicode_FromStringAndSize(" ", 1);
-            if (unlikely(!end_string))
-                return -1;
-            if (PyDict_SetItem(__pyx_print_kwargs, __pyx_n_s_end, end_string) < 0) {
-                Py_DECREF(end_string);
-                return -1;
-            }
-            Py_DECREF(end_string);
-        }
-        kwargs = __pyx_print_kwargs;
-    }
-    result = PyObject_Call(__pyx_print, arg_tuple, kwargs);
-    if (unlikely(kwargs) && (kwargs != __pyx_print_kwargs))
-        Py_DECREF(kwargs);
-    if (!result)
-        return -1;
-    Py_DECREF(result);
-    return 0;
-bad:
-    if (kwargs != __pyx_print_kwargs)
-        Py_XDECREF(kwargs);
-    return -1;
-}
-#endif
-
-#if !CYTHON_COMPILING_IN_PYPY && PY_MAJOR_VERSION < 3
-static int __Pyx_PrintOne(PyObject* f, PyObject *o) {
-    if (!f) {
-        if (!(f = __Pyx_GetStdout()))
-            return -1;
-    }
-    Py_INCREF(f);
-    if (PyFile_SoftSpace(f, 0)) {
-        if (PyFile_WriteString(" ", f) < 0)
-            goto error;
-    }
-    if (PyFile_WriteObject(o, f, Py_PRINT_RAW) < 0)
-        goto error;
-    if (PyFile_WriteString("\n", f) < 0)
-        goto error;
-    Py_DECREF(f);
-    return 0;
-error:
-    Py_DECREF(f);
-    return -1;
-    /* the line below is just to avoid C compiler
-     * warnings about unused functions */
-    return __Pyx_Print(f, NULL, 0);
-}
-#else
-static int __Pyx_PrintOne(PyObject* stream, PyObject *o) {
-    int res;
-    PyObject* arg_tuple = PyTuple_Pack(1, o);
-    if (unlikely(!arg_tuple))
-        return -1;
-    res = __Pyx_Print(stream, arg_tuple, 1);
-    Py_DECREF(arg_tuple);
-    return res;
-}
-#endif
 
 static CYTHON_INLINE PyObject* __Pyx_PyInt_From_long(long value) {
     const long neg_one = (long) -1, const_zero = (long) 0;
