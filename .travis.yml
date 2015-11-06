@@ -2,7 +2,6 @@ language: python
 
 sudo: required
 dist: trusty
-cache: false
 
 python:
     - 2.7
@@ -17,7 +16,7 @@ install:
     - pip install --upgrade cython invoke
     - invoke clean
     - invoke compile_cython
-    - pip install --upgrade .
+    - pip install --no-cache-dir --upgrade .
 
 script:
     - pip install --quiet coverage coveralls
