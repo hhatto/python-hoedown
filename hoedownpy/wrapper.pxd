@@ -12,6 +12,7 @@ cdef struct _toc_data:
     int nesting_level
 
 cdef struct rndr_state:
+    void *opaque
     _toc_data toc_data
     hoedown_html_flags flags
     void (*link_attributes)(hoedown_buffer *ob, const hoedown_buffer *url, const hoedown_renderer_data *data)
