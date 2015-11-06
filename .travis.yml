@@ -13,6 +13,9 @@ before_install:
     - sudo apt-get install tidy
 
 install:
+    - pip install --upgrade cython invoke
+    - invoke clean
+    - invoke compile_cython
     - pip install --upgrade .
 
 script:
