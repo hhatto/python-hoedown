@@ -480,12 +480,12 @@ struct __pyx_t_7wrapper__toc_data {
  * 
  * cdef struct rndr_state:             # <<<<<<<<<<<<<<
  *     _toc_data toc_data
- *     unsigned int flags
+ *     hoedown_html_flags flags
  */
 struct __pyx_t_7wrapper_rndr_state {
   struct __pyx_t_7wrapper__toc_data toc_data;
-  unsigned int flags;
-  void (*link_attributes)(struct hoedown_buffer *, struct hoedown_buffer const *, void *);
+  enum hoedown_html_flags flags;
+  void (*link_attributes)(struct hoedown_buffer *, struct hoedown_buffer const *, struct hoedown_renderer_data const *);
 };
 
 /* "hoedown.pyx":67

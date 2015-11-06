@@ -83,6 +83,9 @@ cdef extern from '_hoedown/src/document.h':
     enum hoedown_table_flags:
         pass
 
+    enum hoedown_html_flags:
+        pass
+
     enum hoedown_list_flags:
         pass
 

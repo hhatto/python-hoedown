@@ -1,6 +1,7 @@
 #define PY_SSIZE_T_CLEAN
 #include <Python.h>
 
+#include "_hoedown/src/html.h"
 #include "_hoedown/src/document.h"
 #include "_hoedown/src/buffer.h"
 
