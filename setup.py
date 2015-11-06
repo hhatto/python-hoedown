@@ -24,7 +24,7 @@ class BaseCommand(Command):
 class CleanCommand(BaseCommand):
     description = 'cleanup directories created by packaging and build processes'
     def run(self):
-        for path in ['build', 'dist', 'hoedown.egg-info', 'docs/_build', 'temp']:
+        for path in ['build', 'dist', 'hoedown.egg-info', 'docs/_build', 'temp', 'tests/__pycache__']:
             if os.path.exists(path):
                 path = os.path.join(dirname, path)
                 print('removing %s' % path)
