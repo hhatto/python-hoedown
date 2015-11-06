@@ -2,6 +2,7 @@ language: python
 
 sudo: required
 dist: trusty
+cache: false
 
 python:
     - 2.7
