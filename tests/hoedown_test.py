@@ -29,6 +29,13 @@ def clean_html(dirty_html):
     return stdout.decode('utf-8')
 
 
+class BaseRendererTest(TestCase):
+    name = 'BaseRenderer'
+
+    def test_smoke(self):
+        BaseRenderer()
+
+
 class SmartyPantsTest(TestCase):
     name = 'SmartyPants'
 
@@ -529,6 +536,7 @@ class UnicodeTest(TestCase):
 
 def run_tests():
     runner([
+        BaseRendererTest,
         SmartyPantsTest,
         HtmlRenderTest,
         MarkdownParserTest,

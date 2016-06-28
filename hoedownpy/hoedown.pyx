@@ -131,8 +131,9 @@ cdef class BaseRenderer:
         self.setup()
 
         cdef _hoedown.hoedown_html_renderer_state *state
-        state = <_hoedown.hoedown_html_renderer_state *> self.callbacks.opaque
-        state.opaque = <void *> self
+        if self.callbacks is not NULL:
+            state = <_hoedown.hoedown_html_renderer_state *> self.callbacks.opaque
+            state.opaque = <void *> self
 
         # Set callbacks
         cdef void **source = <void **> &wrapper.callback_funcs
@@ -145,7 +146,6 @@ cdef class BaseRenderer:
             # ``wrapper.method_names[i]`` is converted to a normal string first.
             method_name = wrapper.method_names[i].decode('utf-8')
             if hasattr(self, method_name):
-
                 dest[i+1] = source[i+1]
 
     def setup(self):
