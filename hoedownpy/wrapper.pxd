@@ -1,4 +1,4 @@
-from _hoedown cimport hoedown_buffer, hoedown_autolink, hoedown_renderer
+from _hoedown cimport hoedown_buffer, hoedown_autolink, hoedown_renderer, hoedown_renderer_data, hoedown_html_flags
 
 
 cdef extern from *:
@@ -12,9 +12,10 @@ cdef struct _toc_data:
     int nesting_level
 
 cdef struct rndr_state:
+    void *opaque
     _toc_data toc_data
-    unsigned int flags
-    void (*link_attributes)(hoedown_buffer *ob, const hoedown_buffer *url, void *self)
+    hoedown_html_flags flags
+    void (*link_attributes)(hoedown_buffer *ob, const hoedown_buffer *url, const hoedown_renderer_data *data)
 
 
 cdef extern from 'wrapper.h':

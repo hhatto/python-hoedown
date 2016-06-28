@@ -121,6 +121,7 @@ cdef class BaseRenderer:
     """
 
     cdef _hoedown.hoedown_renderer *callbacks
+    cdef wrapper.renderopt *options
 
     #: Read-only render flags
     cdef readonly int flags
@@ -129,9 +130,9 @@ cdef class BaseRenderer:
         self.flags = flags
         self.setup()
 
-        cdef wrapper.renderopt *options
-        options = <wrapper.renderopt *> self.callbacks.opaque
-        options.self = <void *> self
+        cdef _hoedown.hoedown_html_renderer_state *state
+        state = <_hoedown.hoedown_html_renderer_state *> self.callbacks.opaque
+        state.opaque = <void *> self
 
         # Set callbacks
         cdef void **source = <void **> &wrapper.callback_funcs
@@ -144,6 +145,7 @@ cdef class BaseRenderer:
             # ``wrapper.method_names[i]`` is converted to a normal string first.
             method_name = wrapper.method_names[i].decode('utf-8')
             if hasattr(self, method_name):
+
                 dest[i+1] = source[i+1]
 
     def setup(self):

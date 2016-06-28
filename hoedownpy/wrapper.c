@@ -1,6 +1,7 @@
 #define PY_SSIZE_T_CLEAN
 #include <Python.h>
 
+#include "_hoedown/src/html.h"
 #include "_hoedown/src/document.h"
 #include "_hoedown/src/buffer.h"
 
@@ -8,9 +9,9 @@
 
 
 #define PROCESS_SPAN(method_name, ...) {\
-    struct renderopt *opt = data->opaque;\
+    struct hoedown_html_renderer_state *opt = data->opaque;\
     PyObject *ret = PyObject_CallMethodObjArgs(\
-        (PyObject *) opt->self, PyUnicode_FromString(method_name),\
+        (PyObject *) opt->opaque, PyUnicode_FromString(method_name),\
         __VA_ARGS__);\
     if (ret == NULL || ret == Py_None) {\
         PyObject *r_ex = PyErr_Occurred();\
@@ -29,9 +30,9 @@
 
 
 #define PROCESS_BLOCK(method_name, ...) {\
-    struct renderopt *opt = data->opaque;\
+    struct hoedown_html_renderer_state *opt = data->opaque;\
     PyObject *ret = PyObject_CallMethodObjArgs(\
-        (PyObject *) opt->self, PyUnicode_FromString(method_name),\
+        (PyObject *) opt->opaque, PyUnicode_FromString(method_name),\
         __VA_ARGS__);\
     if (ret == NULL || ret == Py_None) {\
         PyObject *r_ex = PyErr_Occurred();\

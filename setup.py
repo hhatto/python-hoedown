@@ -105,7 +105,7 @@ setup(
         'Programming Language :: C',
         'Programming Language :: Cython',
         'Programming Language :: Python :: 2.7',
-        'Programming Language :: Python :: 3.2',
+        'Programming Language :: Python :: 3.5',
         'Topic :: Text Processing :: Markup',
         'Topic :: Text Processing :: Markup :: HTML',
         'Topic :: Utilities'

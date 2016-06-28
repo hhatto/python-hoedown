@@ -16,6 +16,18 @@ cdef extern from '_hoedown/src/buffer.h':
 
 
 cdef extern from '_hoedown/src/html.h':
+    struct _toc_data:
+        int header_count
+        int current_level
+        int level_offset
+        int nesting_level
+
+    struct hoedown_html_renderer_state:
+        void *opaque
+        _toc_data toc_data
+        hoedown_html_flags flags
+        void (*link_attributes)(hoedown_buffer *ob, const hoedown_buffer *url, const hoedown_renderer_data *data)
+
     hoedown_renderer *hoedown_html_renderer_new(
         unsigned int render_flags,
         int nesting_level)
@@ -81,6 +93,9 @@ cdef extern from '_hoedown/src/document.h':
         void (*doc_footer)(hoedown_buffer *ob, int inline_render, const hoedown_renderer_data *data)
 
     enum hoedown_table_flags:
+        pass
+
+    enum hoedown_html_flags:
         pass
 
     enum hoedown_list_flags:
