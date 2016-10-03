@@ -2,14 +2,11 @@
 
 import sys
 from os import path
-from hoedown import Markdown, HtmlRenderer, SmartyPants, \
+from hoedown import Markdown, HtmlRenderer, HtmlTocRenderer, SmartyPants, \
     EXT_NO_INTRA_EMPHASIS, EXT_TABLES, EXT_FENCED_CODE, EXT_AUTOLINK, \
-    EXT_STRIKETHROUGH, EXT_LAX_SPACING, EXT_SPACE_HEADERS, \
-    EXT_SUPERSCRIPT, \
-    HTML_SKIP_HTML, HTML_SKIP_STYLE, HTML_SKIP_IMAGES, HTML_SKIP_LINKS, \
-    HTML_EXPAND_TABS, HTML_SAFELINK, HTML_TOC, HTML_HARD_WRAP, \
-    HTML_USE_XHTML, HTML_ESCAPE, \
-    HTML_SMARTYPANTS
+    EXT_STRIKETHROUGH, EXT_SPACE_HEADERS, EXT_SUPERSCRIPT, \
+    HTML_SKIP_HTML, HTML_USE_XHTML, HTML_ESCAPE, \
+    HTML_HARD_WRAP, HTML_SMARTYPANTS
 
 
 hoedown_extensions = {
@@ -18,19 +15,12 @@ hoedown_extensions = {
     '--parse-fenced-code': EXT_FENCED_CODE,
     '--parse-autolink': EXT_AUTOLINK,
     '--parse-strikethrough': EXT_STRIKETHROUGH,
-    '--parse-lax-spacing': EXT_LAX_SPACING,
     '--parse-space-headers': EXT_SPACE_HEADERS,
     '--parse-superscript': EXT_SUPERSCRIPT
 }
 
 hoedown_html_flags = {
     '--render-skip-html': HTML_SKIP_HTML,
-    '--render-skip-style': HTML_SKIP_STYLE,
-    '--render-skip-images': HTML_SKIP_IMAGES,
-    '--render-skip-links': HTML_SKIP_LINKS,
-    '--render-expand-tabs': HTML_EXPAND_TABS,
-    '--render-safelink': HTML_SAFELINK,
-    '--render-toc': HTML_TOC,
     '--render-hard_wrap': HTML_HARD_WRAP,
     '--render-use-xhtml': HTML_USE_XHTML,
     '--render-escape': HTML_ESCAPE,
