@@ -35,6 +35,13 @@ def tests(c):
 
 
 @task
+def pypireg(c):
+    clean(c)
+    c.run("python setup.py sdist")
+    c.run("twine upload dist/*")
+
+
+@task
 def all(c):
     clean(c)
     update(c)
