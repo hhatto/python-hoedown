@@ -1,6 +1,10 @@
 python-hoedown
 ==============
 
+.. image:: https://img.shields.io/pypi/v/hoedown.svg
+    :target: https://pypi.org/project/hoedown/
+    :alt: PyPI Version
+
 .. image:: https://secure.travis-ci.org/hhatto/python-hoedown.png?branch=master
     :target: https://travis-ci.org/hhatto/python-hoedown
 
