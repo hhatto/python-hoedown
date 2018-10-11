@@ -80,6 +80,12 @@ setup(
     license='MIT',
     long_description=open(os.path.join(dirname, 'README.rst')).read(),
     scripts=['scripts/hoedownpy'],
+    extras_require={
+        'dev': [
+            'invoke>=1.2',
+            'Cython>=0.28',
+        ]
+    },
     cmdclass={
         'clean': CleanCommand,
         'compile_cython': CythonCommand,
