@@ -50,3 +50,15 @@ output from Markdown to HTML::
 
     hoedownpy MARKDOWNFILE.md
 
+
+For Maintainer
+--------------
+
+intall development requirements::
+
+    pip install -e ".[dev]"
+
+
+build::
+
+    invoke all
